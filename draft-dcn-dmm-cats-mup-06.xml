@@ -37,6 +37,18 @@
         <email>mipearlska1307@dcn.ssu.ac.kr</email>
       </address>
     </author>
+    <author initials="K." surname="Nguyen-Trung" fullname="Kiem Nguyen Trung">
+      <organization> Soongsil University </organization>
+      <address>
+        <postal>
+          <street>369, Sangdo-ro, Dongjak-gu</street>
+          <city>Seoul</city>
+          <code>06978</code>
+          <country>Republic of Korea</country>
+        </postal>
+        <email>kiemnt@dcn.ssu.ac.kr</email>
+      </address>
+    </author>
     <author initials="Y." surname="Kim" fullname="Younghan Kim">
       <organization> Soongsil University </organization>
       <address>
@@ -478,33 +490,31 @@ the title) for use on http://www.rfc-editor.org/rfcsearch.html. -->
 
     <section anchor="service-segmentation">
       <name>Supporting Service Segmentation with CATS-MUP</name>
-      <t>Emerging 6G services, such as distributed artificial intelligence (AI) inference and extended reality (XR), are increasingly deployed using a service segmentation model, where a service is decomposed into multiple subtasks distributed across different edge locations. These subtasks may be executed sequentially, forming a service pipeline, or in parallel, depending on application logic and performance requirements.</t>
-      <t> While CATS-MUP primarily targets optimal service instance selection for a single service endpoint, its architecture can be naturally extended to support traffic steering for segmented services by leveraging the flexibility of SRv6-based Mobile User Plane routing.</t>
+      <t>Emerging 6G services, such as distributed artificial intelligence (AI) inference and extended reality (XR), are increasingly deployed using a service segmentation model, where a service is decomposed into multiple subtasks distributed across different edge locations. These subtasks may be executed sequentially, forming a service pipeline, or in parallel, depending on application logic and performance requirements. Such service models introduce additional traffic steering requirements beyond the conventional single-service-instance paradigm, as discussed in <xref target="draft-dcn-cats-req-service-segmentation-02"/></t>
+      <t>While CATS-MUP primarily targets optimal service instance selection for a single service endpoint, its architecture can be naturally extended to support traffic steering for segmented services by leveraging the flexibility of SRv6-based Mobile User Plane (MUP) routing.</t>
+      <t>In a service segmentation scenario, an end-to-end service request may need to be processed by multiple service instances following a predefined execution structure, such as a sequential pipeline or a parallel processing graph. Compared to the conventional single-instance service model, the network must be aware of the service execution structure and steer traffic accordingly across multiple service instances.</t>
+      <t>From a traffic steering perspective, supporting service segmentation with CATS-MUP introduces several additional considerations, including the ability to associate a service request with a set of service instances rather than a single instance, the ability to express ordering or dependency relationships among service instances (particularly for sequential service pipelines), and the ability to dynamically adapt traffic steering paths when service instance availability, computing conditions, or user mobility changes.</t>
 
       <section>
-        <name>Overview of Service Segmentation and Traffic Steering Requirements</name>
-        <t>In a service segmentation scenario, an end-to-end service request may need to be processed by multiple service instances in a predefined order or structure. Unlike the conventional single-instance service model, the network must be aware of the service pipeline topology and steer traffic accordingly.</t>
-        <t>From a traffic steering perspective, supporting service segmentation introduces the following additional requirements to the MUP architecture:</t>
-        <ul>
-          <li>The ability to associate a service request with a set of service instances rather than a single instance.</li>
-          <li>The ability to express ordering or dependency relationships among service instances, especially for sequential service pipelines.</li>
-          <li>The ability to dynamically adapt traffic steering paths when service instance availability, computing conditions, or user mobility changes.</li>
-        </ul>
+        <name>MUP Enhancement Considerations for Supporting Sequential Service Pipelines</name>
+        <t>In a sequential service pipeline, service requests are processed by a series of service instances in a predefined order, where the output of one subtask becomes the input to the next. Supporting such execution semantics requires the traffic steering mechanism to explicitly encode service ordering information and ensure that packets traverse the corresponding service instances in sequence.</t>
+        <t>To address this requirement, the MUP architecture can be enhanced by introducing a Sequence Session Transform Route, which enables the Mobile User Plane to steer traffic through multiple service instances in a specified order using SRv6-based routing constructs. In this approach, a service pipeline is represented as an ordered set of processing stages, and the MUP encodes the execution sequence into the SRv6 Segment Routing Header (SRH), allowing packets to be forwarded through the designated service instances without relying on per-instance UPF configuration.</t>
+        <t>Such a mechanism enables flexible and scalable realization of sequential service pipelines, while preserving the core design principles of CATS-MUP. This enhancement allows the control plane to dynamically update the service execution sequence in response to changes in computing or network conditions, without interrupting ongoing user sessions. Further details and design considerations of the Sequence Session Transform Route are described in <xref target="ieee-access-traffic-steering-service-segmentation"/>.</t>
       </section>
 
       <section>
-        <name>Sequential Service Pipeline Support via MUP</name>
-        <t>For sequential service pipelines, traffic generated by a user must be steered through a series of service instances in a specific execution order. This requirement cannot be fully addressed by existing MUP session transform routes, which are designed to map a session to a single service instance.</t>
-        <t>To support sequential service pipelines, the MUP architecture may be extended with a mechanism that allows a session to be transformed into an ordered set of direct segments. Such an extension enables the MUP controller to express a service pipeline as an ordered routing construct, allowing packets to traverse multiple service locations along a predefined sequence within the SRv6 underlay network.</t>
-        <t>This capability allows a single PDU session to be associated with an entire service pipeline, avoiding repeated control-plane signaling or multiple user-plane tunnels between pipeline stages.</t>
+        <name>Supporting Parallel Service Pipelines via MUP</name>
+        <t>In addition to sequential pipelines, service segmentation may involve parallel execution structures, where a service request is split into multiple subtasks that are processed concurrently by different service instances and later merged to produce the final result. Such execution models are common in distributed AI inference and data-intensive applications, and their requirements are further discussed in <xref target="draft-dcn-cats-req-service-segmentation-02"/>.</t>
+        <t>From a traffic steering perspective, parallel service pipelines introduce the need for traffic split and merge functions, which logically decompose incoming service requests into multiple parallel flows and aggregate their outputs before delivering the final response to the user. These split and merge functions may be implemented as part of the application logic or as dedicated service functions within the network.</t>
+        <t>Within the MUP framework, existing Session Transform Routes, including Type 1 and Type 2 routes, are sufficient to support parallel service pipelines. By steering different traffic branches toward their corresponding service instances and subsequently merging them at a designated aggregation point, MUP can support parallel execution without requiring additional routing primitives. This approach allows parallel service pipelines to be realized using the same SRv6-based mechanisms as sequential pipelines, maintaining architectural consistency and minimizing additional complexity.</t>
       </section>
 
       <section>
-        <name>Service Continuity Considerations for Stateful Service Segmentation</name>
-        <t>In practical deployments, service segmentation often involves stateful service instances, where execution state must be preserved across instance relocation or pipeline reconfiguration. In such cases, immediate redirection of traffic to a newly selected service pipeline may result in service disruption if the target instances are not yet ready to process requests.</t>
-        <t>Therefore, supporting service continuity for stateful service segmentation requires coordinated control-plane and data-plane considerations. These include the ability to temporarily maintain traffic delivery to the previous service pipeline, or to delay traffic redirection until state transfer or service preparation is completed.</t>
-        <t>While the detailed mechanisms for state migration and buffering are outside the scope of this document, the CATS-MUP architecture provides a suitable foundation for implementing such continuity-aware procedures. By decoupling session identification from fixed tunnel endpoints and leveraging SRv6-based routing, CATS-MUP enables flexible traffic steering updates that can be aligned with service state management policies.</t>
-        <t>This consideration is particularly important for sequential service pipelines, where disruption at any pipeline stage may affect the correctness of the entire service execution.</t>
+        <name>Enabling Service Continuity for Stateful Service Segmentation via MUP</name>
+        <t>In practical deployments, service segmentation often involves stateful service instances, where execution state must be preserved across service instance relocation or pipeline reconfiguration. In such scenarios, immediate redirection of traffic to a newly selected service pipeline may result in service disruption if the target instances are not yet ready to process incoming requests or if state migration is still in progress.</t>
+        <t>For example, consider a sequential service pipeline in which the final subtask maintains application state. When this stateful subtask is migrated due to mobility events or computing resource degradation, packets processed by upstream subtasks may reach the stateful subtask before migration is completed. As a result, these packets may be dropped or fail to be processed correctly, leading to wasted computing resources and unnecessary consumption of network bandwidth.</t>
+        <t>To mitigate such issues, the MUP architecture can be extended with a service continuity mechanism based on SRv6-assisted buffering. In this approach, packets destined for a stateful service instance undergoing migration are temporarily buffered by an intermediate SRv6 processing function. Once the target service instance becomes ready and state migration is completed, buffered packets can be forwarded to the restored service pipeline. This buffering-based approach allows service continuity to be preserved during pipeline reconfiguration or service relocation, without requiring changes to the application-layer protocol or tight coupling with service-specific logic.</t>
+        <t>By combining SRv6-based buffering with coordinated control-plane procedures, CATS-MUP can provide a practical and deployable foundation for supporting service continuity in stateful service segmentation scenarios, as further demonstrated in <xref target="ieee-access-service-continuity-service-segmentation"/>.</t>
       </section>
     </section>
   </middle>
@@ -645,6 +655,33 @@ the title) for use on http://www.rfc-editor.org/rfcsearch.html. -->
             <author initials="H." surname="Yokota"></author>
             <author initials="J." surname="Korhonen"></author>
             <date month="August" year="2014"/>
+          </front>
+        </reference>
+
+        <reference anchor="draft-dcn-cats-req-service-segmentation-02" target="https://datatracker.ietf.org/doc/draft-dcn-cats-req-service-segmentation/02/">
+          <front>
+            <title>Additional CATS requirements consideration for Service Segmentation-related use cases</title>
+            <author initials="M-N." surname="Tran"></author>
+            <author initials="Y" surname="Kim"></author>
+            <date month="July" year="2025"/>
+          </front>
+        </reference>
+        <reference anchor="ieee-access-traffic-steering-service-segmentation" target="https://doi.org/10.1109/ACCESS.2025.3630182">
+          <front>
+            <title>Design of 5G Architecture Enhancements for Supporting Edge Split Computing Service Pipeline</title>
+            <author initials="M-N." surname="Tran"></author>
+            <author initials="K." surname="Nguyen-Trung"></author>
+            <author initials="Y" surname="Kim"></author>
+            <date month="July" year="2025"/>
+          </front>
+        </reference>
+        <reference anchor="ieee-access-service-continuity-service-segmentation" target="https://doi.org/10.1109/ACCESS.2026.3661972">
+          <front>
+            <title>Enabling Service Continuity for Stateful Service Segmentation in Mobile Edge Computing toward 6G</title>
+            <author initials="K." surname="Nguyen-Trung"></author>
+            <author initials="M-N." surname="Tran"></author>
+            <author initials="Y" surname="Kim"></author>
+            <date month="July" year="2025"/>
           </front>
         </reference>
       </references>
