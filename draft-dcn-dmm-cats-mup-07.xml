@@ -498,8 +498,8 @@ the title) for use on http://www.rfc-editor.org/rfcsearch.html. -->
       <section>
         <name>MUP Enhancement Considerations for Supporting Sequential Service Pipelines</name>
         <t>In a sequential service pipeline, service requests are processed by a series of service instances in a predefined order, where the output of one subtask becomes the input to the next. Supporting such execution semantics requires the traffic steering mechanism to explicitly encode service ordering information and ensure that packets traverse the corresponding service instances in sequence.</t>
-        <t>To address this requirement, the MUP architecture can be enhanced by introducing a Sequence Session Transform Route, which enables the Mobile User Plane to steer traffic through multiple service instances in a specified order using SRv6-based routing constructs. In this approach, a service pipeline is represented as an ordered set of processing stages, and the MUP encodes the execution sequence into the SRv6 Segment Routing Header (SRH), allowing packets to be forwarded through the designated service instances without relying on per-instance UPF configuration.</t>
-        <t>Such a mechanism enables flexible and scalable realization of sequential service pipelines, while preserving the core design principles of CATS-MUP. This enhancement allows the control plane to dynamically update the service execution sequence in response to changes in computing or network conditions, without interrupting ongoing user sessions. Further details and design considerations of the Sequence Session Transform Route are described in <xref target="ieee-access-traffic-steering-service-segmentation"/>.</t>
+        <t>To address this requirement, the MUP architecture can be enhanced by introducing a <em>Sequence Session Transform Route</em>, which enables the Mobile User Plane to steer traffic through multiple service instances in a specified order using SRv6-based routing constructs. In this approach, a service pipeline is represented as an ordered set of processing stages, and the MUP encodes the execution sequence into the SRv6 Segment Routing Header (SRH) by leveraging SRv6 Service Function Chaining (SFC) mechanisms, as specified in <xref target="RFC9491"/>.</t>
+        <t>Such a mechanism enables flexible and scalable realization of sequential service pipelines, while preserving the core design principles of CATS-MUP. This enhancement allows the control plane to dynamically update the service execution sequence in response to changes in computing or network conditions, without interrupting ongoing user sessions. Further details and design considerations of the <em>Sequence Session Transform Route</em> are described in <xref target="ieee-access-traffic-steering-service-segmentation"/>.</t>
       </section>
 
       <section>
@@ -655,6 +655,15 @@ the title) for use on http://www.rfc-editor.org/rfcsearch.html. -->
             <author initials="H." surname="Yokota"></author>
             <author initials="J." surname="Korhonen"></author>
             <date month="August" year="2014"/>
+          </front>
+        </reference>
+
+        <reference anchor="RFC9491" target="https://datatracker.ietf.org/doc/rfc9491/">
+          <front>
+            <title>Integration of the Network Service Header (NSH) and Segment Routing for Service Function Chaining (SFC)</title>
+            <author initials="J." surname="Guichard"></author>
+            <author initials="J." surname="Tantsura"></author>
+            <date month="November" year="2023"/>
           </front>
         </reference>
 
