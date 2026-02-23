@@ -9,7 +9,7 @@
 <rfc
       xmlns:xi="http://www.w3.org/2001/XInclude"
       category="info"
-      docName="draft-dcn-dmm-cats-mup-06"
+      docName="draft-dcn-dmm-cats-mup-07"
       ipr="trust200902"
       obsoletes=""
       updates=""
@@ -24,7 +24,7 @@
   <!-- xml2rfc v2v3 conversion 3.17.4 -->
 <front>
     <title abbrev="CATS-MUP">Computing Aware Traffic Steering Consideration for Mobile User Plane Architecture</title>
-    <seriesInfo name="Internet-Draft" value="draft-dcn-dmm-cats-mup-06"/>
+    <seriesInfo name="Internet-Draft" value="draft-dcn-dmm-cats-mup-07"/>
     <author initials="N." surname="Tran" fullname="Minh-Ngoc Tran">
       <organization> Soongsil University </organization>
       <address>
@@ -62,7 +62,7 @@
         <email>younghak@ssu.ac.kr</email>
       </address>
     </author>
-    <date year="2025"/>
+    <date year="2026"/>
     <area>Routing Area</area>
     <workgroup>Distributed Mobility Management</workgroup>
     <!-- [rfced] Please insert any keywords (beyond those that appear in
