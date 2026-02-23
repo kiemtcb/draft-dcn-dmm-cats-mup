@@ -513,13 +513,7 @@ the title) for use on http://www.rfc-editor.org/rfcsearch.html. -->
             <author fullname="John Drake" initials="J." surname="Drake">
               <organization>Juniper Networks, Inc.</organization>
             </author>
-            <author fullname="Daniel Huang" initials="D." surname="Huang">
-              <organization>ZTE</organization>
-            </author>
-            <author fullname="Gyan Mishra" initials="G. S." surname="Mishra">
-              <organization>Verizon Inc.</organization>
-            </author>
-            <date day="10" month="February" year="2025"/>
+            <date day="17" month="February" year="2026"/>
           </front>
           <seriesInfo name="Internet-Draft" value="draft-ietf-cats-framework"/>
         </reference>
@@ -533,7 +527,7 @@ the title) for use on http://www.rfc-editor.org/rfcsearch.html. -->
             <author initials="T." surname="Murakami"></author>
             <author initials="K." surname="Patel"></author>
             <author initials="J." surname="Horn"></author>
-            <date day="30" month="May" year="2025"/>
+            <date day="20" month="October" year="2025"/>
           </front>
           <seriesInfo name="Internet-Draft" value="ietf-dmm-mup-architecture"/>
         </reference>
@@ -541,12 +535,12 @@ the title) for use on http://www.rfc-editor.org/rfcsearch.html. -->
         <reference anchor="I-D.draft-ietf-dmm-srv6mob-arch" target="https://datatracker.ietf.org/doc/draft-ietf-dmm-srv6mob-arch/">
           <front>
             <title>Architecture Discussion on SRv6 Mobile User plane</title>
-            <author initials="M." surname="Kohno"></author>
-            <author initials="F." surname="Clad"></author>
-            <author initials="P." surname="Camarillo"></author>
-            <author initials="Z." surname="Ali"></author>
+            <author initials="T." surname="Kamata"></author>
+            <author initials="J." surname="Horn"></author>
             <author initials="L." surname="Jalil"></author>
-            <date day="15" month="February" year="2024"/>
+            <author initials="W." surname="Cheng"></author>
+            <author initials="M." surname="Kohno"></author>
+            <date day="02" month="September" year="2025"/>
           </front>
         </reference>
 
@@ -554,26 +548,23 @@ the title) for use on http://www.rfc-editor.org/rfcsearch.html. -->
           <front>
             <title>Mobile User Plane Architecture using Segment Routing for Distributed Mobility Management</title>
             <author initials="K." surname="Yao"></author>
-            <author initials="D." surname="Trossen"></author>
-            <author initials="M." surname="Boucadair"></author>
-            <author initials="LM." surname="Contreras"></author>
+            <author initials="L.M." surname="Contreras"></author>
             <author initials="H." surname="Shi"></author>
-            <author initials="Y." surname="Li"></author>
             <author initials="S." surname="Zhang"></author>
             <author initials="Q." surname="An"></author>
-            <date day="14" month="February" year="2025"/>
+            <date day="04" month="February" year="2026"/>
           </front>
         </reference>
 
         <reference anchor="I-D.draft-ietf-cats-metric-definition" target="https://datatracker.ietf.org/doc/draft-ietf-cats-metric-definition/">
           <front>
-            <title>Mobile User Plane Architecture using Segment Routing for Distributed Mobility Management</title>
+            <title>CATS Metrics Definition</title>
             <author initials="K." surname="Yao"></author>
-            <author initials="H." surname="Shi"></author>
             <author initials="C." surname="Li"></author>
-            <author initials="LM." surname="Contreras"></author>
+            <author initials="L.M." surname="Contreras"></author>
             <author initials="J." surname="Ros-Giralt"></author>
-            <date day="5" month="February" year="2025"/>
+            <author initials="G." surname="Zeng"></author>
+            <date day="02" month="February" year="2026"/>
           </front>
         </reference>
 
@@ -582,19 +573,20 @@ the title) for use on http://www.rfc-editor.org/rfcsearch.html. -->
             <title>Distribute Service Metric By BGP</title>
             <author initials="C." surname="Lin"></author>
             <author initials="H." surname="Yao"></author>
-            <date day="6" month="June" year="2024"/>
+            <author initials="Q." surname="Xiong"></author>
+            <date day="21" month="December" year="2025"/>
           </front>
         </reference>
 
         <reference anchor="I-D.draft-ietf-idr-5g-edge-service-metadata" target="https://datatracker.ietf.org/doc/draft-ietf-idr-5g-edge-service-metadata/">
           <front>
-            <title>Distribute Service Metric By BGP</title>
+            <title>BGP Extension for 5G Edge Service Metadata</title>
             <author initials="L." surname="Dunbar"></author>
             <author initials="K." surname="Majumdar"></author>
             <author initials="C." surname="Li"></author>
             <author initials="G." surname="Mishra"></author>
             <author initials="Z." surname="Du"></author>
-            <date day="22" month="July" year="2024"/>
+            <date day="18" month="September" year="2025"/>
           </front>
         </reference>
 
@@ -620,7 +612,7 @@ the title) for use on http://www.rfc-editor.org/rfcsearch.html. -->
         <reference anchor="RFC7333" target="https://datatracker.ietf.org/doc/rfc7333/">
           <front>
             <title>Requirements for Distributed Mobility Management</title>
-            <author initials="H." surname="Chan"></author>
+            <author initials="A." surname="Chan"></author>
             <author initials="D." surname="Liu"></author>
             <author initials="P." surname="Seite"></author>
             <author initials="H." surname="Yokota"></author>

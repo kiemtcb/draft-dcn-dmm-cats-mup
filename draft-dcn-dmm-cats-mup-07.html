@@ -1,0 +1,1987 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>Computing Aware Traffic Steering Consideration for Mobile User Plane Architecture</title>
+<meta content="Minh-Ngoc Tran" name="author">
+<meta content="Kiem Nguyen Trung" name="author">
+<meta content="Younghan Kim" name="author">
+<meta content="
+       The document   describes the Mobile User Plane (MUP) architecture for Distributed Mobility Management. The proposed architecture converts the user mobility session information from the control plane entity to an IPv6 dataplane routing information. When there are multiple candidate instances located at different location to serve an user request, the MUP Provider Edge (PE) might prioritize the closest service location. However, the closest routing path might not be the optimal route. 
+       This document discusses how the mentioned MUP architecture can be leveraged to set up dataplane routing paths to the optimal service instance location with the assistance of computing-aware traffic steering capabilities. For each session request, based on the up-to-date collected computing and network information, the MUP controller can convert the session information to the optimal route. 
+    " name="description">
+<meta content="xml2rfc 3.31.0" name="generator">
+<meta content="Internet-Draft" name="keyword">
+<meta content="draft-dcn-dmm-cats-mup-06" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.31.0
+    Python 3.10.12
+    ConfigArgParse 1.7.1
+    google-i18n-address 3.1.1
+    intervaltree 3.2.1
+    Jinja2 3.1.6
+    lxml 6.0.2
+    platformdirs 4.5.1
+    pycountry 24.6.1
+    PyYAML 5.4.1
+    requests 2.25.1
+    wcwidth 0.4.0
+-->
+<link href="draft-dcn-dmm-cats-mup-07.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">/*
+
+  NOTE: Changes at the bottom of this file overrides some earlier settings.
+
+  Once the style has stabilized and has been adopted as an official RFC style,
+  this can be consolidated so that style settings occur only in one place, but
+  for now the contents of this file consists first of the initial CSS work as
+  provided to the RFC Formatter (xml2rfc) work, followed by itemized and
+  commented changes found necessary during the development of the v3
+  formatters.
+
+*/
+
+/* fonts */
+@import url('https://static.ietf.org/fonts/noto-sans/import.css'); /* Sans-serif */
+@import url('https://static.ietf.org/fonts/noto-serif/import.css'); /* Serif (print) */
+@import url('https://static.ietf.org/fonts/roboto-mono/import.css'); /* Monospace */
+
+:root {
+  --font-sans: 'Noto Sans', Arial, Helvetica, sans-serif;
+  --font-serif: 'Noto Serif', 'Times', 'Times New Roman', serif;
+  --font-mono: 'Roboto Mono', Courier, 'Courier New', monospace;
+}
+
+@viewport {
+  zoom: 1.0;
+}
+@-ms-viewport {
+  width: extend-to-zoom;
+  zoom: 1.0;
+}
+/* general and mobile first */
+html {
+}
+body {
+  max-width: 90%;
+  margin: 1.5em auto;
+  color: #222;
+  background-color: #fff;
+  font-size: 14px;
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  scroll-behavior: smooth;
+  overflow-wrap: break-word;
+}
+.ears {
+  display: none;
+}
+
+/* headings */
+#title, h1, h2, h3, h4, h5, h6 {
+  margin: 1em 0 0.5em;
+  font-weight: bold;
+  line-height: 1.3;
+}
+#title {
+  clear: both;
+  border-bottom: 1px solid #ddd;
+  margin: 0 0 0.5em 0;
+  padding: 1em 0 0.5em;
+}
+.author {
+  padding-bottom: 4px;
+}
+h1 {
+  font-size: 26px;
+  margin: 1em 0;
+}
+h2 {
+  font-size: 22px;
+  margin-top: -20px;  /* provide offset for in-page anchors */
+  padding-top: 33px;
+}
+h3 {
+  font-size: 18px;
+  margin-top: -36px;  /* provide offset for in-page anchors */
+  padding-top: 42px;
+}
+h4 {
+  font-size: 16px;
+  margin-top: -36px;  /* provide offset for in-page anchors */
+  padding-top: 42px;
+}
+h5, h6 {
+  font-size: 14px;
+}
+#n-copyright-notice {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+}
+/* general structure */
+p {
+  padding: 0;
+  margin: 0 0 1em 0;
+  text-align: left;
+}
+div, span {
+  position: relative;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  padding: 1em 1em 0;
+  margin-bottom: 1.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+@media print {
+  svg {
+    max-height: 850px;
+    max-width: 660px;
+  }
+}
+svg[font-family~="serif" i], svg [font-family~="serif" i] {
+  font-family: var(--font-serif);
+}
+svg[font-family~="sans-serif" i], svg [font-family~="sans-serif" i] {
+  font-family: var(--font-sans);
+}
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  padding: 1em 1em 0;
+  margin-bottom: 1.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  display: table;
+  border: none;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 1em 2em;
+}
+ol ol, ul ul, ol ul, ul ol {
+  margin-left: 1em;
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+.ulCompact li {
+  margin: 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+}
+ul.empty li, .ulEmpty li {
+  margin-top: 0.5em;
+}
+ul.ulBare, li.ulBare {
+  margin-left: 0em !important;
+}
+ul.compact, .ulCompact,
+ol.compact, .olCompact {
+  line-height: 100%;
+  margin: 0 0 0 2em;
+}
+
+/* definition lists */
+dl {
+}
+dl > dt {
+  float: left;
+  margin-right: 1em;
+}
+/* 
+dl.nohang > dt {
+  float: none;
+}
+*/
+dl > dd {
+  margin-bottom: .8em;
+  min-height: 1.3em;
+}
+dl.compact > dd, .dlCompact > dd {
+  margin-bottom: 0em;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0em;
+}
+
+/* links */
+a {
+  text-decoration: none;
+}
+a[href] {
+  color: #22e; /* Arlen: WCAG 2019 */
+}
+a[href]:hover {
+  background-color: #f2f2f2;
+}
+figcaption a[href],
+a[href].selfRef {
+  color: #222;
+}
+/* XXX probably not this:
+a.selfRef:hover {
+  background-color: transparent;
+  cursor: default;
+} */
+
+/* Figures */
+tt, code, pre {
+  background-color: #f9f9f9;
+  font-family: var(--font-mono);
+}
+pre {
+  border: 1px solid #eee;
+  margin: 0;
+  padding: 1em;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption {
+  font-style: italic;
+  margin: 0 0 1em 0;
+}
+@media screen {
+  pre {
+    overflow-x: auto;
+    max-width: 100%;
+    max-width: calc(100% - 22px);
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 1.2em 2em;
+}
+blockquote {
+  background-color: #f9f9f9;
+  color: #111; /* Arlen: WCAG 2019 */
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  margin: 1em 0;
+}
+blockquote > *:last-child {
+  margin-bottom: 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+.xref {
+  overflow-wrap: normal;
+}
+
+/* tables */
+table {
+  width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+  border: 1px solid #eee;
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.5em 0.75em;
+}
+th {
+  text-align: left;
+  background-color: #e9e9e9;
+}
+tr:nth-child(2n+1) > td {
+  background-color: #f5f5f5;
+}
+table caption {
+  font-style: italic;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+table p {
+  /* XXX to avoid bottom margin on table row signifiers. If paragraphs should
+     be allowed within tables more generally, it would be far better to select on a class. */
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  color: #666; /* Arlen: AHDJ 2019 */
+  text-decoration: none;
+  visibility: hidden;
+  user-select: none;
+  -ms-user-select: none;
+  -o-user-select:none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+@media screen {
+  aside:hover > a.pilcrow,
+  p:hover > a.pilcrow,
+  blockquote:hover > a.pilcrow,
+  div:hover > a.pilcrow,
+  li:hover > a.pilcrow,
+  pre:hover > a.pilcrow {
+    visibility: visible;
+  }
+  a.pilcrow:hover {
+    background-color: transparent;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+}
+.bcp14 {
+  font-variant: small-caps;
+}
+
+.role {
+  font-variant: all-small-caps;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: 0.9em;
+}
+#identifiers dt {
+  width: 3em;
+  clear: left;
+}
+#identifiers dd {
+  float: left;
+  margin-bottom: 0;
+}
+/* Fix PDF info block run off issue */
+@media print {
+  #identifiers dd {
+    max-width: 100%;
+  }
+}
+#identifiers .authors .author {
+  display: inline-block;
+  margin-right: 1.5em;
+}
+#identifiers .authors .org {
+  font-style: italic;
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #666; /* Arlen: WCAG 2019 */
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: left;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc  {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+}
+nav.toc ul {
+  margin: 0 0.5em 0 0;
+  padding: 0;
+  list-style: none;
+}
+nav.toc li {
+  line-height: 1.3em;
+  margin: 0.75em 0;
+  padding-left: 1.2em;
+  text-indent: -1.2em;
+}
+/* references */
+.references dt {
+  text-align: right;
+  font-weight: bold;
+  min-width: 7em;
+}
+.references dd {
+  margin-left: 8em;
+  overflow: auto;
+}
+
+.refInstance {
+  margin-bottom: 1.25em;
+}
+
+.refSubseries {
+  margin-bottom: 1.25em;
+}
+
+.references .ascii {
+  margin-bottom: 0.25em;
+}
+
+/* index */
+.index ul {
+  margin: 0 0 0 1em;
+  padding: 0;
+  list-style: none;
+}
+.index ul ul {
+  margin: 0;
+}
+.index li {
+  margin: 0;
+  text-indent: -2em;
+  padding-left: 2em;
+  padding-bottom: 5px;
+}
+.indexIndex {
+  margin: 0.5em 0 1em;
+}
+.index a {
+  font-weight: 700;
+}
+/* make the index two-column on all but the smallest screens */
+@media (min-width: 600px) {
+  .index ul {
+    -moz-column-count: 2;
+    -moz-column-gap: 20px;
+  }
+  .index ul ul {
+    -moz-column-count: 1;
+    -moz-column-gap: 0;
+  }
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  margin: 1em 0;
+}
+
+address.vcard .nameRole {
+  font-weight: 700;
+  margin-left: 0;
+}
+address.vcard .label {
+  font-family: var(--font-sans);
+  margin: 0.5em 0;
+}
+address.vcard .type {
+  display: none;
+}
+.alternative-contact {
+  margin: 1.5em 0 1em;
+}
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+
+/* temporary notes */
+.rfcEditorRemove::before {
+  position: absolute;
+  top: 0.2em;
+  right: 0.2em;
+  padding: 0.2em;
+  content: "The RFC Editor will remove this note";
+  color: #9e2a00; /* Arlen: WCAG 2019 */
+  background-color: #ffd; /* Arlen: WCAG 2019 */
+}
+.rfcEditorRemove {
+  position: relative;
+  padding-top: 1.8em;
+  background-color: #ffd; /* Arlen: WCAG 2019 */
+  border-radius: 3px;
+}
+.cref {
+  background-color: #ffd; /* Arlen: WCAG 2019 */
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+/* alternative layout for smaller screens */
+@media screen and (max-width: 1023px) {
+  body {
+    padding-top: 2em;
+  }
+  #title {
+    padding: 1em 0;
+  }
+  h1 {
+    font-size: 24px;
+  }
+  h2 {
+    font-size: 20px;
+    margin-top: -18px;  /* provide offset for in-page anchors */
+    padding-top: 38px;
+  }
+  #identifiers dd {
+    max-width: 60%;
+  }
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    background-color: inherit;
+    border-bottom: 1px solid #ccc;
+  }
+  #toc h2 {
+    margin: -1px 0 0 0;
+    padding: 4px 0 4px 6px;
+    padding-right: 1em;
+    min-width: 190px;
+    font-size: 1.1em;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+  }
+  #toc h2::before { /* css hamburger */
+    float: right;
+    position: relative;
+    width: 1em;
+    height: 1px;
+    left: -164px;
+    margin: 6px 0 0 0;
+    background: white none repeat scroll 0 0;
+    box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+    content: "";
+  }
+  #toc nav {
+    display: none;
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+}
+
+/* alternative layout for wide screens */
+@media screen and (min-width: 1024px) {
+  body {
+    max-width: 724px;
+    margin: 42px auto;
+    padding-left: 1.5em;
+    padding-right: 29em;
+  }
+  #toc {
+    position: fixed;
+    top: 42px;
+    right: 42px;
+    width: 25%;
+    margin: 0;
+    padding: 0 1em;
+    z-index: 1;
+  }
+  #toc h2 {
+    border-top: none;
+    border-bottom: 1px solid #ddd;
+    font-size: 1em;
+    font-weight: normal;
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 0;
+    overflow: auto;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre {
+    page-break-inside: avoid;
+  }
+  figure {
+    overflow: scroll;
+  }
+  .breakable pre {
+    break-inside: auto;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  h2+*, h3+*, h4+*, h5+*, h6+* {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+/* This is commented out here, as the string-set: doesn't
+   pass W3C validation currently */
+/*
+.ears thead .left {
+  string-set: ears-top-left content();
+}
+
+.ears thead .center {
+  string-set: ears-top-center content();
+}
+
+.ears thead .right {
+  string-set: ears-top-right content();
+}
+
+.ears tfoot .left {
+  string-set: ears-bottom-left content();
+}
+
+.ears tfoot .center {
+  string-set: ears-bottom-center content();
+}
+
+.ears tfoot .right {
+  string-set: ears-bottom-right content();
+}
+*/
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+  /* The following is commented out here, but set appropriately by in code, as
+     the content depends on the document */
+  /*
+  @top-left {
+    content: 'Internet-Draft';
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-left {
+    content: string(ears-top-left);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-center {
+    content: string(ears-top-center);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-right {
+    content: string(ears-top-right);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @bottom-left {
+    content: string(ears-bottom-left);
+    vertical-align: top;
+    border-top: solid 1px #ccc;
+  }
+  @bottom-center {
+    content: string(ears-bottom-center);
+    vertical-align: top;
+    border-top: solid 1px #ccc;
+  }
+  @bottom-right {
+      content: '[Page ' counter(page) ']';
+      vertical-align: top;
+      border-top: solid 1px #ccc;
+  }
+  */
+
+}
+
+/* Changes introduced to fix issues found during implementation */
+/* Make sure links are clickable even if overlapped by following H* */
+a {
+  z-index: 2;
+}
+/* Separate body from document info even without intervening H1 */
+section {
+  clear: both;
+}
+
+
+/* Top align author divs, to avoid names without organization dropping level with org names */
+.author {
+  vertical-align: top;
+}
+
+/* Leave room in document info to show Internet-Draft on one line */
+#identifiers dt {
+  width: 8em;
+}
+
+/* Don't waste quite as much whitespace between label and value in doc info */
+#identifiers dd {
+  margin-left: 1em;
+}
+
+/* Give floating toc a background color (needed when it's a div inside section */
+#toc {
+  background-color: white;
+}
+
+/* Make the collapsed ToC header render white on gray also when it's a link */
+@media screen and (max-width: 1023px) {
+  #toc h2 a,
+  #toc h2 a:link,
+  #toc h2 a:focus,
+  #toc h2 a:hover,
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+}
+
+/* Give the bottom of the ToC some whitespace */
+@media screen and (min-width: 1024px) {
+  #toc {
+    padding: 0 0 1em 1em;
+  }
+}
+
+/* Style section numbers with more space between number and title */
+.section-number {
+  padding-right: 0.5em;
+}
+
+/* prevent monospace from becoming overly large */
+tt, code, pre {
+  font-size: 95%;
+}
+
+/* Fix the height/width aspect for ascii art*/
+.sourcecode pre,
+.art-text pre {
+  line-height: 1.12;
+}
+
+
+/* Add styling for a link in the ToC that points to the top of the document */
+a.toplink {
+  float: right;
+  margin-right: 0.5em;
+}
+
+/* Fix the dl styling to match the RFC 7992 attributes */
+dl > dt,
+dl.dlParallel > dt {
+  float: left;
+  margin-right: 1em;
+}
+dl.dlNewline > dt {
+  float: none;
+}
+
+/* Provide styling for table cell text alignment */
+table td.text-left,
+table th.text-left {
+  text-align: left;
+}
+table td.text-center,
+table th.text-center {
+  text-align: center;
+}
+table td.text-right,
+table th.text-right {
+  text-align: right;
+}
+
+/* Make the alternative author contact information look less like just another
+   author, and group it closer with the primary author contact information */
+.alternative-contact {
+  margin: 0.5em 0 0.25em 0;
+}
+address .non-ascii {
+  margin: 0 0 0 2em;
+}
+
+/* With it being possible to set tables with alignment
+  left, center, and right, { width: 100%; } does not make sense */
+table {
+  width: auto;
+}
+
+/* Avoid reference text that sits in a block with very wide left margin,
+   because of a long floating dt label.*/
+.references dd {
+  overflow: visible;
+}
+
+/* Control caption placement */
+caption {
+  caption-side: bottom;
+}
+
+/* Limit the width of the author address vcard, so names in right-to-left
+   script don't end up on the other side of the page. */
+
+address.vcard {
+  max-width: 30em;
+  margin-right: auto;
+}
+
+/* For address alignment dependent on LTR or RTL scripts */
+address div.left {
+  text-align: left;
+}
+address div.right {
+  text-align: right;
+}
+
+/* Provide table alignment support.  We can't use the alignX classes above
+   since they do unwanted things with caption and other styling. */
+table.right {
+ margin-left: auto;
+ margin-right: 0;
+}
+table.center {
+ margin-left: auto;
+ margin-right: auto;
+}
+table.left {
+ margin-left: 0;
+ margin-right: auto;
+}
+
+/* Give the table caption label the same styling as the figcaption */
+caption a[href] {
+  color: #222;
+}
+
+@media print {
+  .toplink {
+    display: none;
+  }
+
+  /* avoid overwriting the top border line with the ToC header */
+  #toc {
+    padding-top: 1px;
+  }
+
+  /* Avoid page breaks inside dl and author address entries */
+  .vcard {
+    page-break-inside: avoid;
+  }
+
+}
+/* Tweak the bcp14 keyword presentation */
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+/* Tweak the invisible space above H* in order not to overlay links in text above */
+ h2 {
+  margin-top: -18px;  /* provide offset for in-page anchors */
+  padding-top: 31px;
+ }
+ h3 {
+  margin-top: -18px;  /* provide offset for in-page anchors */
+  padding-top: 24px;
+ }
+ h4 {
+  margin-top: -18px;  /* provide offset for in-page anchors */
+  padding-top: 24px;
+ }
+/* Float artwork pilcrow to the right */
+@media screen {
+  .artwork a.pilcrow {
+    display: block;
+    line-height: 0.7;
+    margin-top: 0.15em;
+  }
+}
+/* Make pilcrows on dd visible */
+@media screen {
+  dd:hover > a.pilcrow {
+    visibility: visible;
+  }
+}
+/* Make the placement of figcaption match that of a table's caption
+   by removing the figure's added bottom margin */
+.alignLeft.art-text,
+.alignCenter.art-text,
+.alignRight.art-text {
+   margin-bottom: 0;
+}
+.alignLeft,
+.alignCenter,
+.alignRight {
+  margin: 1em 0 0 0;
+}
+/* In print, the pilcrow won't show on hover, so prevent it from taking up space,
+   possibly even requiring a new line */
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+/* Styling for the external metadata */
+div#external-metadata {
+  background-color: #eee;
+  padding: 0.5em;
+  margin-bottom: 0.5em;
+  display: none;
+}
+div#internal-metadata {
+  padding: 0.5em;                       /* to match the external-metadata padding */
+}
+/* Styling for title RFC Number */
+h1#rfcnum {
+  clear: both;
+  margin: 0 0 -1em;
+  padding: 1em 0 0 0;
+}
+/* Make .olPercent look the same as <ol><li> */
+dl.olPercent > dd {
+  margin-bottom: 0.25em;
+  min-height: initial;
+}
+/* Give aside some styling to set it apart */
+aside {
+  border-left: 1px solid #ddd;
+  margin: 1em 0 1em 2em;
+  padding: 0.2em 2em;
+}
+aside > dl,
+aside > ol,
+aside > ul,
+aside > table,
+aside > p {
+  margin-bottom: 0.5em;
+}
+/* Additional page break settings */
+@media print {
+  figcaption, table caption {
+    page-break-before: avoid;
+  }
+}
+/* Font size adjustments for print */
+@media print {
+  body  { font-size: 10pt;      line-height: normal; max-width: 96%; }
+  h1    { font-size: 1.72em;    padding-top: 1.5em; } /* 1*1.2*1.2*1.2 */
+  h2    { font-size: 1.44em;    padding-top: 1.5em; } /* 1*1.2*1.2 */
+  h3    { font-size: 1.2em;     padding-top: 1.5em; } /* 1*1.2 */
+  h4    { font-size: 1em;       padding-top: 1.5em; }
+  h5, h6 { font-size: 1em;      margin: initial; padding: 0.5em 0 0.3em; }
+}
+/* Sourcecode margin in print, when there's no pilcrow */
+@media print {
+  .artwork,
+  .artwork > pre,
+  .sourcecode {
+    margin-bottom: 1em;
+  }
+}
+/* Avoid narrow tables forcing too narrow table captions, which may render badly */
+table {
+  min-width: 20em;
+}
+/* ol type a */
+ol.type-a { list-style-type: lower-alpha; }
+ol.type-A { list-style-type: upper-alpha; }
+ol.type-i { list-style-type: lower-roman; }
+ol.type-I { list-style-type: upper-roman; }
+/* Apply the print table and row borders in general, on request from the RPC,
+and increase the contrast between border and odd row background slightly */
+table {
+  border: 1px solid #ddd;
+}
+td {
+  border-top: 1px solid #ddd;
+}
+tr {
+  break-inside: avoid;
+}
+tr:nth-child(2n+1) > td {
+  background-color: #f8f8f8;
+}
+/* Use style rules to govern display of the TOC. */
+@media screen and (max-width: 1023px) {
+  #toc nav { display: none; }
+  #toc.active nav { display: block; }
+}
+/* Add support for keepWithNext */
+.keepWithNext {
+  break-after: avoid-page;
+  break-after: avoid-page;
+}
+/* Add support for keepWithPrevious */
+.keepWithPrevious {
+  break-before: avoid-page;
+}
+/* Change the approach to avoiding breaks inside artwork etc. */
+figure, pre, table, .artwork, .sourcecode  {
+  break-before: auto;
+  break-after: auto;
+}
+/* Avoid breaks between <dt> and <dd> */
+dl {
+  break-before: auto;
+  break-inside: auto;
+}
+dt {
+  break-before: auto;
+  break-after: avoid-page;
+}
+dd {
+  break-before: avoid-page;
+  break-after: auto;
+  orphans: 3;
+  widows: 3
+}
+span.break, dd.break {
+  margin-bottom: 0;
+  min-height: 0;
+  break-before: auto;
+  break-inside: auto;
+  break-after: auto;
+}
+/* Undo break-before ToC */
+@media print {
+  #toc {
+    break-before: auto;
+  }
+}
+/* Text in compact lists should not get extra bottom margin space,
+   since that would makes the list not compact */
+ul.compact p, .ulCompact p,
+ol.compact p, .olCompact p {
+ margin: 0;
+}
+/* But the list as a whole needs the extra space at the end */
+section ul.compact,
+section .ulCompact,
+section ol.compact,
+section .olCompact {
+  margin-bottom: 1em;                    /* same as p not within ul.compact etc. */
+}
+/* The tt and code background above interferes with for instance table cell
+   backgrounds.  Changed to something a bit more selective. */
+tt, code {
+  background-color: transparent;
+}
+p tt, p code, li tt, li code, dt tt, dt code {
+  background-color: #f8f8f8;
+}
+/* Tweak the pre margin -- 0px doesn't come out well */
+pre {
+   margin-top: 0.5px;
+}
+/* Tweak the compact list text */
+ul.compact, .ulCompact,
+ol.compact, .olCompact,
+dl.compact, .dlCompact {
+  line-height: normal;
+}
+/* Don't add top margin for nested lists */
+li > ul, li > ol, li > dl,
+dd > ul, dd > ol, dd > dl,
+dl > dd > dl {
+  margin-top: initial;
+}
+/* Elements that should not be rendered on the same line as a <dt> */
+/* This should match the element list in writer.text.TextWriter.render_dl() */
+dd > div.artwork:first-child,
+dd > aside:first-child,
+dd > blockquote:first-child,
+dd > figure:first-child,
+dd > ol:first-child,
+dd > div.sourcecode:first-child,
+dd > table:first-child,
+dd > ul:first-child {
+  clear: left;
+}
+/* fix for weird browser behaviour when <dd/> is empty */
+dt+dd:empty::before{
+  content: "\00a0";
+}
+/* Make paragraph spacing inside <li> smaller than in body text, to fit better within the list */
+li > p {
+  margin-bottom: 0.5em
+}
+/* Don't let p margin spill out from inside list items */
+li > p:last-of-type:only-child {
+  margin-bottom: 0;
+}
+</style>
+<link href="rfc-local.css" rel="stylesheet" type="text/css">
+<script type="application/javascript">async function addMetadata(){try{const e=document.styleSheets[0].cssRules;for(let t=0;t<e.length;t++)if(/#identifiers/.exec(e[t].selectorText)){const a=e[t].cssText.replace("#identifiers","#external-updates");document.styleSheets[0].insertRule(a,document.styleSheets[0].cssRules.length)}}catch(e){console.log(e)}const e=document.getElementById("external-metadata");if(e)try{var t,a="",o=function(e){const t=document.getElementsByTagName("meta");for(let a=0;a<t.length;a++)if(t[a].getAttribute("name")===e)return t[a].getAttribute("content");return""}("rfc.number");if(o){t="https://www.rfc-editor.org/rfc/rfc"+o+".json";try{const e=await fetch(t);a=await e.json()}catch(e){t=document.URL.indexOf("html")>=0?document.URL.replace(/html$/,"json"):document.URL+".json";const o=await fetch(t);a=await o.json()}}if(!a)return;e.style.display="block";const s="",d="https://datatracker.ietf.org/doc",n="https://datatracker.ietf.org/ipr/search",c="https://www.rfc-editor.org/info",l=a.doc_id.toLowerCase(),i=a.doc_id.slice(0,3).toLowerCase(),f=a.doc_id.slice(3).replace(/^0+/,""),u={status:"Status",obsoletes:"Obsoletes",obsoleted_by:"Obsoleted By",updates:"Updates",updated_by:"Updated By",see_also:"See Also",errata_url:"Errata"};let h="<dl style='overflow:hidden' id='external-updates'>";["status","obsoletes","obsoleted_by","updates","updated_by","see_also","errata_url"].forEach(e=>{if("status"==e){a[e]=a[e].toLowerCase();var t=a[e].split(" "),o=t.length,w="",p=1;for(let e=0;e<o;e++)p<o?w=w+r(t[e])+" ":w+=r(t[e]),p++;a[e]=w}else if("obsoletes"==e||"obsoleted_by"==e||"updates"==e||"updated_by"==e){var g,m="",b=1;g=a[e].length;for(let t=0;t<g;t++)a[e][t]&&(a[e][t]=String(a[e][t]).toLowerCase(),m=b<g?m+"<a href='"+s+"/rfc/".concat(a[e][t])+"'>"+a[e][t].slice(3)+"</a>, ":m+"<a href='"+s+"/rfc/".concat(a[e][t])+"'>"+a[e][t].slice(3)+"</a>",b++);a[e]=m}else if("see_also"==e){var y,L="",C=1;y=a[e].length;for(let t=0;t<y;t++)if(a[e][t]){a[e][t]=String(a[e][t]);var _=a[e][t].slice(0,3),v=a[e][t].slice(3).replace(/^0+/,"");L=C<y?"RFC"!=_?L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+_+" "+v+"</a>, ":L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+v+"</a>, ":"RFC"!=_?L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+_+" "+v+"</a>":L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+v+"</a>",C++}a[e]=L}else if("errata_url"==e){var R="";R=a[e]?R+"<a href='"+a[e]+"'>Errata exist</a> | <a href='"+d+"/"+l+"'>Datatracker</a>| <a href='"+n+"/?"+i+"="+f+"&submit="+i+"'>IPR</a> | <a href='"+c+"/"+l+"'>Info page</a>":"<a href='"+d+"/"+l+"'>Datatracker</a> | <a href='"+n+"/?"+i+"="+f+"&submit="+i+"'>IPR</a> | <a href='"+c+"/"+l+"'>Info page</a>",a[e]=R}""!=a[e]?"Errata"==u[e]?h+=`<dt>More info:</dt><dd>${a[e]}</dd>`:h+=`<dt>${u[e]}:</dt><dd>${a[e]}</dd>`:"Errata"==u[e]&&(h+=`<dt>More info:</dt><dd>${a[e]}</dd>`)}),h+="</dl>",e.innerHTML=h}catch(e){console.log(e)}else console.log("Could not locate metadata <div> element");function r(e){return e.charAt(0).toUpperCase()+e.slice(1)}}window.removeEventListener("load",addMetadata),window.addEventListener("load",addMetadata);</script>
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">CATS-MUP</td>
+<td class="right">February 2025</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Tran, et al.</td>
+<td class="center">Expires 27 August 2025</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">Distributed Mobility Management</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-dcn-dmm-cats-mup-06</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2025-02-23" class="published">23 February 2025</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Informational</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2025-08-27">27 August 2025</time></dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">N. Tran</div>
+<div class="org">Soongsil University</div>
+</div>
+<div class="author">
+      <div class="author-name">K. Nguyen-Trung</div>
+<div class="org">Soongsil University</div>
+</div>
+<div class="author">
+      <div class="author-name">Y. Kim</div>
+<div class="org">Soongsil University</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">Computing Aware Traffic Steering Consideration for Mobile User Plane Architecture</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">The document <span>[<a href="#I-D.draft-ietf-dmm-mup-architecture" class="cite xref">I-D.draft-ietf-dmm-mup-architecture</a>]</span> describes the Mobile User Plane (MUP) architecture for Distributed Mobility Management. The proposed architecture converts the user mobility session information from the control plane entity to an IPv6 dataplane routing information. When there are multiple candidate instances located at different location to serve an user request, the MUP Provider Edge (PE) might prioritize the closest service location. However, the closest routing path might not be the optimal route.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">This document discusses how the mentioned MUP architecture can be leveraged to set up dataplane routing paths to the optimal service instance location with the assistance of computing-aware traffic steering capabilities. For each session request, based on the up-to-date collected computing and network information, the MUP controller can convert the session information to the optimal route.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 27 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2025 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-terminology-used-in-this-dr" class="internal xref">Terminology used in this draft</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-mup-enhancement-requirement" class="internal xref">MUP enhancement requirements for supporting CATS</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-mup-enhancement-considerati" class="internal xref">MUP enhancement considerations for supporting CATS</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-cats-mup-centralized-deploy" class="internal xref">CATS-MUP Centralized Deployment case</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.1">
+                    <p id="section-toc.1-1.4.2.1.2.1.1"><a href="#section-4.1.1" class="auto internal xref">4.1.1</a>.  <a href="#name-mup-route-enhancements" class="internal xref">MUP Route enhancements</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.2">
+                    <p id="section-toc.1-1.4.2.1.2.2.1"><a href="#section-4.1.2" class="auto internal xref">4.1.2</a>.  <a href="#name-deployment-architecture" class="internal xref">Deployment architecture</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.3">
+                    <p id="section-toc.1-1.4.2.1.2.3.1"><a href="#section-4.1.3" class="auto internal xref">4.1.3</a>.  <a href="#name-new-ue-request-underlay-rou" class="internal xref">New UE request underlay routing setup procedure</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.4">
+                    <p id="section-toc.1-1.4.2.1.2.4.1"><a href="#section-4.1.4" class="auto internal xref">4.1.4</a>.  <a href="#name-ue-mobility-handling-proced" class="internal xref">UE mobility handling procedure</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-cats-mup-distributed-deploy" class="internal xref">CATS-MUP Distributed Deployment case</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.1">
+                    <p id="section-toc.1-1.4.2.2.2.1.1"><a href="#section-4.2.1" class="auto internal xref">4.2.1</a>.  <a href="#name-mup-route-enhancements-2" class="internal xref">MUP Route enhancements</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.2">
+                    <p id="section-toc.1-1.4.2.2.2.2.1"><a href="#section-4.2.2" class="auto internal xref">4.2.2</a>.  <a href="#name-deployment-architecture-2" class="internal xref">Deployment architecture</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.3">
+                    <p id="section-toc.1-1.4.2.2.2.3.1"><a href="#section-4.2.3" class="auto internal xref">4.2.3</a>.  <a href="#name-new-ue-request-underlay-routi" class="internal xref">New UE request underlay routing setup procedure</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.4">
+                    <p id="section-toc.1-1.4.2.2.2.4.1"><a href="#section-4.2.4" class="auto internal xref">4.2.4</a>.  <a href="#name-ue-mobility-handling-procedur" class="internal xref">UE mobility handling procedure</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">The document <span>[<a href="#I-D.draft-ietf-dmm-mup-architecture" class="cite xref">I-D.draft-ietf-dmm-mup-architecture</a>]</span> describes the Mobile User Plane architecture for Distributed Mobility Management. This architecture is composed of a MUP controller and multiple MUP PEs. When applying the MUP architecture in 5G network, the MUP PEs accomodate the N3 RAN network as Interwork Segment or the N6 DN network as Direct Segment. The MUP PEs advertises the Interwork and Discovery Segment dataplane network reachability (e.g. Segment Routing IPv6 segment identifier (SRv6 SID)) to the MUP network via the interwork and direct segment Discovery routes. Meanwhile, the MUP controller transformed the received user mobility session information to the corresponding interwork and direct segment information. Then, it advertises the transformed information to MUP PEs via Session Transformed routes. The MUP PEs use the matching Discovery routes to resolve the Session Transformed routes and forward the packet through the MUP SRv6 network.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">This document discusses the optimal route configuration problem when applying the mentioned MUP architecture in a network scenario where an user request can be served by multiple computing instances of the same service located at different locations. The closest geographical service location to users might not be the optimal service instance's location as pointed out in the problem statement document of IETF Computing-Aware Traffic Steering (CATS) working group <span>[<a href="#I-D.draft-ietf-cats-usecases-requirements" class="cite xref">I-D.draft-ietf-cats-usecases-requirements</a>]</span>. In this scenario, an optimal service instance location can be decided at the mobile control plane or data plane.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3"> In the control plane case, it is possible to use an Application Function (AF) to determine the optimal service instance and influence the 5G control plane to select the DN corresponding to the chosen instance. The MUP-C only needs to transform the optimal DN information in the session information into the corresponding route. Meanwhile, in the data plane approach, the MUP-C should decide the optimal service instance location by itself and transform the unoptimal session information into the optimal route based on its decision. The data plane approach can avoid additional signalling procedure at the control plane of the other approach. It also supports IP Routing paradigm benefit of SRv6 mobile user plane as mentioned in the edge computing use case of the document <span>[<a href="#I-D.draft-ietf-dmm-srv6mob-arch" class="cite xref">I-D.draft-ietf-dmm-srv6mob-arch</a>]</span>.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4"> Therefore, a solution to integrate CATS capabilities into the mentioned MUP architecture is presented in this document. By considering service computing and network information of all candidate service instances, the MUP controller can convert the session information into the optimal dataplane route.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5"> This document is proposed to discuss a possible extension consideration of the original MUP architecture document<span>[<a href="#I-D.draft-ietf-dmm-mup-architecture" class="cite xref">I-D.draft-ietf-dmm-mup-architecture</a>]</span>. Regarding the Distributed Mobility Management requirements described in <span>[<a href="#RFC7333" class="cite xref">RFC7333</a>]</span>, the MUP architecture can partly address the "Non-optimal routes" problem and the "Multicast considerations" requirement by integrating CATS capabilties. As described in <span>[<a href="#RFC4786" class="cite xref">RFC4786</a>]</span>, anycast is the practice of making a particular service address available in multiple locations. Anycast support could be in the scope of multicast support for distributed mobility management.<a href="#section-1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="terminology">
+<section id="section-2">
+      <h2 id="name-terminology-used-in-this-dr">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-terminology-used-in-this-dr" class="section-name selfRef">Terminology used in this draft</a>
+      </h2>
+<p id="section-2-1">CATS-MUP-C: Computing-aware traffic steering MUP-C which integrates CATS path selection and MUP-C features.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">Besides, this document uses the following terminologies which has been defined in <span>[<a href="#I-D.draft-ietf-cats-framework" class="cite xref">I-D.draft-ietf-cats-framework</a>]</span><a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">CATS: Computing-Aware Traffic Steering takes into account the dynamic nature of computing resource metrics and network state metrics to steer service traffic 
+   to a service instance.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">Service: An offering that is made available by a provider by orchestrating a set of resources (networking, compute, storage, etc.). The same service can be provided in many locations; each of them constitutes a service instance.<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-5">Service instance: An instance of running resources according to a given service logic.<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-6">Service contact instance: A client-facing service function instance that is responsible for receiving requests in the context of a given service. A single service can be represented and accessed via several contact instances that run in different regions of a network.<a href="#section-2-6" class="pilcrow">¶</a></p>
+<p id="section-2-7">CATS Path Selector (C-PS): A functional entity that computes and selects paths towards service locations and instances and which accommodates the requirements of service requests. Such a path computation engine takes into account the service and network status information.<a href="#section-2-7" class="pilcrow">¶</a></p>
+<p id="section-2-8">CATS Service Metric Agent (C-SMA): A functional entity that is responsible for collecting service capabilities and status, and for reporting them to a C-PS.<a href="#section-2-8" class="pilcrow">¶</a></p>
+<p id="section-2-9">CATS Network Metric Agent (C-NMA):  functional entity that is responsible for collecting network capabilities and status, and for reporting them to a C-PS.<a href="#section-2-9" class="pilcrow">¶</a></p>
+<p id="section-2-10"></p>
+</section>
+</div>
+<div id="requirements">
+<section id="section-3">
+      <h2 id="name-mup-enhancement-requirement">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-mup-enhancement-requirement" class="section-name selfRef">MUP enhancement requirements for supporting CATS</a>
+      </h2>
+<p id="section-3-1"> This section presents 3 enhancement points that need to be added in MUP for selecting an optimal service instance for serving an user request.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2"> First, the MUP architecture should be capable of identifying the service and its candidate service instances. These service identifiers are well defined in CATS framework document <span>[<a href="#I-D.draft-ietf-cats-framework" class="cite xref">I-D.draft-ietf-cats-framework</a>]</span>, CATS Service ID (CS-ID) is used to differentiate between different services. CATS Instance Selector ID (CIS-ID) is used to differentiate between different service instances of the same service.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-3"> Second, the MUP architecture should be capable of advertising service deployment information among its components. The egress MUP PE attaching to the MUP direct segment should gather the corresponding service and servince instance information (CS-ID and CIS-ID) and avertise to the MUP environment. Different methods can be considered for this requirement.<a href="#section-3-3" class="pilcrow">¶</a></p>
+<p id="section-3-4"> Third, the MUP architecture should be capable of advertising the computing and network metrics (CATS metrics) related to the each service instance. The egress MUP PE attaching to the MUP direct segment should gather the corresponding service CATS metrics and avertise to the MUP environment. Different methods can be considered for this requirement.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-5"> This document only discusses the requirements and architecture. Different methods for service information and CATS metrics distribution to the network can be applied. BGP extension is an example approach that can be referred from related IETF documents such as <span>[<a href="#I-D.draft-lin-idr-distribute-service-metric" class="cite xref">I-D.draft-lin-idr-distribute-service-metric</a>]</span> or <span>[<a href="#I-D.draft-ietf-idr-5g-edge-service-metadata" class="cite xref">I-D.draft-ietf-idr-5g-edge-service-metadata</a>]</span>. Solutions for mitigating routing instability issue that might be caused by varied and frequent changed CATS metrics can also be referred in related IETF documents. For example, updating frequency can be set to at least 30 seconds according to <span>[<a href="#I-D.draft-ietf-idr-5g-edge-service-metadata" class="cite xref">I-D.draft-ietf-idr-5g-edge-service-metadata</a>]</span> or converting low-level fine-grained metrics into a normalized one as mentioned in <span>[<a href="#I-D.draft-ietf-cats-metric-definition" class="cite xref">I-D.draft-ietf-cats-metric-definition</a>]</span>. Collecting metrics by a centralized entity as described below in this document is another candidate method for reducing the metric advertisement burden in the network.<a href="#section-3-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="architecture">
+<section id="section-4">
+      <h2 id="name-mup-enhancement-considerati">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-mup-enhancement-considerati" class="section-name selfRef">MUP enhancement considerations for supporting CATS</a>
+      </h2>
+<section id="section-4.1">
+        <h3 id="name-cats-mup-centralized-deploy">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-cats-mup-centralized-deploy" class="section-name selfRef">CATS-MUP Centralized Deployment case</a>
+        </h3>
+<section id="section-4.1.1">
+          <h4 id="name-mup-route-enhancements">
+<a href="#section-4.1.1" class="section-number selfRef">4.1.1. </a><a href="#name-mup-route-enhancements" class="section-name selfRef">MUP Route enhancements</a>
+          </h4>
+<p id="section-4.1.1-1">Compared with the original route definition introduced in <span>[<a href="#I-D.draft-ietf-dmm-mup-architecture" class="cite xref">I-D.draft-ietf-dmm-mup-architecture</a>]</span>, the Direct Segment Discovery Route (DSD) and the Type 2 Session Transformed Route (T2ST) need modifications to support the centralized CATS-MUP deployment case. Another CATS Metrics Update Route (CMU) is also introduced.<a href="#section-4.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1.1-2">The Direct Segment Discovery route advertises the reachability information of the direct segment. This route is advertised from the PEs attaching to the direct segments to the PEs attaching to the mobile network access side. In CATS scenario, the direct segment is a specific instance of a service. The service identifier CS-ID and service instance identifier CIS-ID information are required in this route. The CS-ID can be used as the direct segment BGP extended community attribute. The list below shows the information that should be included in the BGP NLRI of the DSD route in CATS-MUP centralized deployment case:<a href="#section-4.1.1-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.1.1-3.1">CS-ID<a href="#section-4.1.1-3.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.1.1-3.2">CIS-ID<a href="#section-4.1.1-3.2" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.1.1-3.3">Attached PE SID<a href="#section-4.1.1-3.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-4.1.1-4">The Type 2 Session Transformed Route convert the session information into dataplane routing information. This route is advertised from the CATS-MUP-C to the PEs attaching to the mobile network access side. In CATS scenario, the direct segment is a specific instance of a service. This route type includes the target service identifier CS-ID and the tunnel endpoint identifier on the mobile network core side information. The optimal service instance identifier CIS-ID determined by the CATS-MUP-C is also required in this route information. The list below shows the information that should be included in the BGP NLRI of the T2ST route in CATS-MUP centralized deployment case:<a href="#section-4.1.1-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.1.1-5.1">CS-ID<a href="#section-4.1.1-5.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.1.1-5.2">Optimal CIS-ID<a href="#section-4.1.1-5.2" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.1.1-5.3">Tunnel Endpoint Identifier on the core side<a href="#section-4.1.1-5.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-4.1.1-6">The CATS Metric Update route convert the session information into dataplane routing information. This route is advertised from the PEs attaching to the direct segments to the CATS-MUP-C. This route type update the CATS metrics related to the attaching service instance of each PE to the CATS-MUP-C. The list below shows the information that should be included in the BGP NLRI of the CMU route in CATS-MUP centralized deployment case:<a href="#section-4.1.1-6" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.1.1-7.1">CS-ID<a href="#section-4.1.1-7.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.1.1-7.2">CIS-ID<a href="#section-4.1.1-7.2" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.1.1-7.3">CATS metrics<a href="#section-4.1.1-7.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+<section id="section-4.1.2">
+          <h4 id="name-deployment-architecture">
+<a href="#section-4.1.2" class="section-number selfRef">4.1.2. </a><a href="#name-deployment-architecture" class="section-name selfRef">Deployment architecture</a>
+          </h4>
+<span id="name-cats-mup-centralized-deploym"></span><div id="catmup-cen-arch">
+<figure id="figure-1">
+            <div class="alignLeft art-text artwork" id="section-4.1.2-1.1">
+<pre>
+                             +----------------+
+                             |    Mobility    |
+                             |   Management   |
+                             |     System     |
+                             +----------------+
+                                      |
+                        Session Information, CS-ID
+                                      |
+                     T2ST    +--------v-------+  CMU A
+                     +-------|   CATS-MUP-C   |&lt;-----+
+                  +--|-------|    +------+    |------|--+
+                  |  |       |    | C-PS |    |      |  |
+                  |  |       +----------------+      |  |   +----------+
+      UE-         |  v                 CMU B ^       |  |   |   C-SMA  |
+         \+---+   +------+ DSD A             |   +------+   |----------|-Service1
+      UE--|RAN|---|  PE  |&lt;------------------|---|  PE  |---|  Service | Instance
+          +---+   +------+&lt;---------------\  \   +------+   |   Site A | (CS-ID S1)
+      UE-/        |        DSD B           \  \         |   +----------+ (CIS-ID S1A)
+                  |                         \  \        |
+                  |                          \  \       |
+                  |                           \  \      |
+                  |     MUP network            \ +------+   +----------+
+                  |      +-------+              \|  PE  |---|  Service |
+                  |      | C-NMA |               +------+   |   Site B |-Service1
+                  |      +-------+                      |   |----------| Instance
+                  +-------------------------------------+   |   C-SMA  | (CS-ID S1)
+                                                            +----------+ (CIS-ID S1B)
+
+
+
+</pre>
+</div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-cats-mup-centralized-deploym" class="selfRef">CATS-MUP Centralized deployment option</a>
+            </figcaption></figure>
+</div>
+<p id="section-4.1.2-2">Figure 1 describes the CATS-MUP Centralized deployment architecture. The controller MUP-C in previous mentioned document is enhanced with CATS path selection capability and renamed to CATS-MUP-C. The Centrailized deployment option has the following key features:<a href="#section-4.1.2-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.1.2-3.1">The DSD routes advertise service and service instance identity information (CS-ID and CIS-ID) from the Service Site PEs to the RAN PEs. This happens only one time when a service instance is deployed or removed at a service site<a href="#section-4.1.2-3.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.1.2-3.2">The CMU routes periodically advertise CATS metrics corresponding to each service instance from the Service Site PEs to the CATS-MUP-C<a href="#section-4.1.2-3.2" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.1.2-3.3">The CATS-MUP-C decides the optimal service instance for each UE session based on the metrics from the CMU routes<a href="#section-4.1.2-3.3" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.1.2-3.4">The T2ST routes convert the UE session information into the optimal underlay routing information and provide them to the RAN PEs.<a href="#section-4.1.2-3.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+<section id="section-4.1.3">
+          <h4 id="name-new-ue-request-underlay-rou">
+<a href="#section-4.1.3" class="section-number selfRef">4.1.3. </a><a href="#name-new-ue-request-underlay-rou" class="section-name selfRef">New UE request underlay routing setup procedure</a>
+          </h4>
+<span id="name-new-ue-request-underlay-rout"></span><div id="catmup-cen-newue-proc">
+<figure id="figure-2">
+            <div class="alignLeft art-text artwork" id="section-4.1.3-1.1">
+<pre>
++----+  +----+  +-----+  +-----+  +-----+
+| UE |  |RAN1|  |CATS |  |SiteA|  |SiteB|
+|    |  | PE |  |MUP-C|  | PE  |  | PE  |
++----+  +----+  +-----+  +-----+  +-----+
+  |       |       |        |        |
+  |       0.DSD
+  |       (CS-ID S1, CIS-ID S1A, SiteA PE SID)
+  |       (CS-ID S1, CIS-ID S1B, SiteB PE SID)
+  |       |&lt;---------------|        |
+  |       |&lt;------------------------|
+  |       |       |        |        |
+  |       1.CMU - periodically advertised
+  |       (CS-ID S1, CIS-ID S1A, CATS metrics)
+  |       (CS-ID S1, CIS-ID S1B, CATS metrics)
+  |       |       |&lt;-------|        |
+  |       |       |&lt;----------------|
+  2. UE request session establishment
+  CATS-MUP-C recieves UE session information
+  |       |       |        |        |
+  |      3.CATS-MUP-C determines
+  |      optimal service instance S1A
+  |       |       |        |        |
+  |      4.TS2T
+  |      (CS-ID S1, CIS-ID S1A, TEID)
+  |       |&lt;------|        |        |
+  |       |       |        |        |
+  5. RAN1 PE use DSD route from SiteA (CIS-ID S1A)
+  to route UE traffic to SiteA
+  |------&gt;|---------------&gt;|        |
+  |       |       |        |        |
+  6. In case of optimal service instance change
+  to SiteB based on current metrics
+  |       |       |        |        |
+  |      7.CATS-MUP-C determines
+  |      optimal service instance S1B
+  |       |       |        |        |
+  |      8.TS2T
+  |      (CS-ID S1, CIS-ID S1B, TEID)
+  |       |&lt;------|        |        |
+  |       |       |        |        |
+  9. RAN1 PE use DSD route from SiteB (CIS-ID S1B)
+  to route UE traffic to SiteB
+  |------&gt;|------------------------&gt;|
+
+
+</pre>
+</div>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-new-ue-request-underlay-rout" class="selfRef">New UE request underlay routing setup procedure</a>
+            </figcaption></figure>
+</div>
+<p id="section-4.1.3-2">Figure 3 describes the sequence of how the CATS-MUP Centralized deployment approach setup the underlay routing path for an UE request.<a href="#section-4.1.3-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.1.3-3.1">First, when a service instance is available at a service site, a DSD route is advertised from the corresponding PE of that site. In the example in Figure 3, DSD routes are advertised from SiteA and SiteB PEs to all of the RAN PEs. These routes announce the service and service instance identities (CS-ID, CIS-ID) running at each service site and the corresponding PE SRv6 SID<a href="#section-4.1.3-3.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.1.3-3.2">Then, the CATS metrics corresponding to each service instance is periodically updated from the Site PEs to the CATS-MUP-C via the CMU routes<a href="#section-4.1.3-3.2" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.1.3-3.3">When a UE request session establishment to the mobile management system, the CATS-MUP-C recieves the session information which includes the requested service CS-ID and the TEID of the session. The CATS-MUP-C determines the optimal service instance for the session based on current CATS metrics.<a href="#section-4.1.3-3.3" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.1.3-3.4">Then, the CATS-MUP-C maps the session information TEID with the optimal service instance CIS-ID and advertises this information to the RAN PE via the T2ST route.<a href="#section-4.1.3-3.4" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.1.3-3.5">Upon recieving the T2ST route, the RAN PE selects the DSD route that has the same CIS-ID information with the recieved T2ST route (CIS-ID S1A in this example). The RAN PE uses this D2D route for steering the UE traffic to the optimal service site.<a href="#section-4.1.3-3.5" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.1.3-3.6">In case of the optimal service instance change to another site (SiteB in this example) due to current CATS metrics update, the CATS-MUP-C advertises a new T2ST route to the RAN PE, which maps the session information TEID with the new optimal service instance CIS-ID (S1B in this example). The RAN PE resolves the new T2ST route with the corresponding DSD route of the new CIS-ID.<a href="#section-4.1.3-3.6" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+<section id="section-4.1.4">
+          <h4 id="name-ue-mobility-handling-proced">
+<a href="#section-4.1.4" class="section-number selfRef">4.1.4. </a><a href="#name-ue-mobility-handling-proced" class="section-name selfRef">UE mobility handling procedure</a>
+          </h4>
+<span id="name-ue-mobility-handling-procedu"></span><div id="catmup-cen-mob-proc">
+<figure id="figure-3">
+            <div class="alignLeft art-text artwork" id="section-4.1.4-1.1">
+<pre>
++----+  +----+ +----+ +-----+  +-----+  +-----+
+| UE |  |RAN1| |RAN2| |CATS |  |SiteA|  |SiteB|
+|    |  | PE | | PE | |MUP-C|  | PE  |  | PE  |
++----+  +----+ +----+ +-----+  +-----+  +-----+
+  |       |       |      |        |        |
+  |       0.DSD
+  |       (CS-ID S1, CIS-ID S1A, SiteA PE SID)
+  |       (CS-ID S1, CIS-ID S1B, SiteB PE SID)
+  |       |&lt;----------------------|        |
+  |       |&lt;-------------------------------|
+  |       0.DSD
+  |       (CS-ID S1, CIS-ID S1A, SiteA PE SID)
+  |       (CS-ID S1, CIS-ID S1B, SiteB PE SID)
+  |       |       |&lt;--------------|        |
+  |       |       |&lt;-----------------------|
+  |       |       |      |        |        |
+  |       1.CMU - periodically advertised
+  |       (CS-ID S1, CIS-ID S1A, CATS metrics)
+  |       (CS-ID S1, CIS-ID S1B, CATS metrics)
+  |       |       |      |&lt;-------|        |
+  |       |       |      |&lt;----------------|
+     UE traffic is currently routed
+          from RAN1 to SiteA
+  |------&gt;|----------------------&gt;|        |
+  |       |       |      |        |        |
+  2.UE moves to RAN2
+  CATS-MUP-C recieves modified UE session information
+  |       |       |      |        |        |
+  |       |       |      |        |        |
+  |      3a.(If stateful service support required)
+  |      Send TS2T map to previous service instance
+  |      (CS-ID S1, CIS-ID S1A, TEID)
+  |       |       |&lt;-----|        |        |
+  |      3a.After stateful migration/previous
+  |      packet flow is completed
+  |       |       |      |        |        |
+  |      3.CATS-MUP-C determines
+  |      optimal service instance S1B
+  |       |       |      |        |        |
+  |      4.TS2T
+  |      (CS-ID S1, CIS-ID S1B, TEID)
+  |       |       |      |        |        |
+  |       |       |&lt;-----|        |        |
+  5. RAN2 PE use DSD route from SiteB (CIS-ID S1B)
+  to route UE traffic to SiteB
+  |--------------&gt;|-----------------------&gt;|
+
+
+</pre>
+</div>
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<a href="#name-ue-mobility-handling-procedu" class="selfRef">UE mobility handling procedure</a>
+            </figcaption></figure>
+</div>
+<p id="section-4.1.4-2">Figure 4 describes the sequence of how the CATS-MUP Centralized deployment approach setup the underlay routing path when UE moves to a new RAN.<a href="#section-4.1.4-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.1.4-3.1">DSD routes are advertised from service site PEs to all RAN PEs. CMU routes are periodically advertised from the site PEs to the CATS-MUP-C<a href="#section-4.1.4-3.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.1.4-3.2">When UE moves to a different RAN, the CATS-MUP-C recieves modified UE session information from the mobility management system<a href="#section-4.1.4-3.2" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.1.4-3.3">The CATS-MUP-C select the new optimal service instance based on the current CATS metrics and send a corresponding T2ST route to the new RAN PE that maps the session information with the new optimal service instance CIS-ID (CIS-ID S1B in this example).<a href="#section-4.1.4-3.3" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.1.4-3.4">In case of stateful/sticky service support are required, where connection to the previous service instance need to be maintained, the CATS-MUP-C should firstly send a T2ST route that maps the session information with the previous service instance CIS-ID. Then, depends on the session continuity policy, the CATS-MUP-C can update the PE with a new T2ST route later. For example, new TS2T can be sent to PE after service packet flow to the previous instance is completed or after service state migration is completed.<a href="#section-4.1.4-3.4" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.1.4-3.5">Upon recieving the T2ST route, the RAN PE selects the DSD route that has the same CIS-ID information with the recieved T2ST route (CIS-ID S1B in this example). The RAN PE uses this D2D route for steering the UE traffic to the optimal service site.<a href="#section-4.1.4-3.5" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</section>
+<section id="section-4.2">
+        <h3 id="name-cats-mup-distributed-deploy">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-cats-mup-distributed-deploy" class="section-name selfRef">CATS-MUP Distributed Deployment case</a>
+        </h3>
+<section id="section-4.2.1">
+          <h4 id="name-mup-route-enhancements-2">
+<a href="#section-4.2.1" class="section-number selfRef">4.2.1. </a><a href="#name-mup-route-enhancements-2" class="section-name selfRef">MUP Route enhancements</a>
+          </h4>
+<p id="section-4.2.1-1">Compared with the original route definition introduced in <span>[<a href="#I-D.draft-ietf-dmm-mup-architecture" class="cite xref">I-D.draft-ietf-dmm-mup-architecture</a>]</span>, the Direct Segment Discovery Route (DSD) and the Type 2 Session Transformed Route (T2ST) need modifications to support the distributed CATS-MUP deployment case.<a href="#section-4.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.1-2">The Direct Segment Discovery route advertises the reachability information of the direct segment. This route is advertised from the PEs attaching to the direct segments to the PEs attaching to the mobile network access side. For the distributed CATS-MUP deployment case, in addition to the CS-ID and the CIS-ID, the CATS metrics of the corresponding service instance of the PE is also included. The CS-ID can be used as the direct segment extended community ID. The list below shows the information that should be included in the BGP NLRI of the DSD route in CATS-MUP centralized deployment case:<a href="#section-4.2.1-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.2.1-3.1">CS-ID<a href="#section-4.2.1-3.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.2.1-3.2">CIS-ID<a href="#section-4.2.1-3.2" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.2.1-3.3">CATS metrics<a href="#section-4.2.1-3.3" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.2.1-3.4">Attached PE SID<a href="#section-4.2.1-3.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-4.2.1-4">The Type 2 Session Transformed Route convert the session information into dataplane routing information. This route is advertised from the CATS-MUP-C to the PEs attaching to the mobile network access side. For the distributed CATS-MUP deployment case, this route type only includes the target service identifier CS-ID and the tunnel endpoint identifier on the mobile network core side information. The list below shows the information that should be included in the BGP NLRI of the T2ST route in CATS-MUP centralized deployment case:<a href="#section-4.2.1-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.2.1-5.1">CS-ID<a href="#section-4.2.1-5.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.2.1-5.2">Tunnel Endpoint Identifier on the core side<a href="#section-4.2.1-5.2" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+<section id="section-4.2.2">
+          <h4 id="name-deployment-architecture-2">
+<a href="#section-4.2.2" class="section-number selfRef">4.2.2. </a><a href="#name-deployment-architecture-2" class="section-name selfRef">Deployment architecture</a>
+          </h4>
+<span id="name-cats-mup-distributed-deploym"></span><div id="catmup-dist-arch">
+<figure id="figure-4">
+            <div class="alignLeft art-text artwork" id="section-4.2.2-1.1">
+<pre>
+                             +----------------+
+                             |    Mobility    |
+                             |   Management   |
+                             |     System     |
+                             +----------------+
+                                      |
+                        Session Information, CS-ID
+                                      |
+                     T2ST    +--------v-------+
+                     +-------|                |
+                  +--|-------|      MUP-C     |---------+
+                  |  |       |                |         |
+                  |  |       +----------------+         |   +----------+
+      UE-         |  v                                  |   |   C-SMA  |
+         \+---+   +------+ DSD A                 +------+   |----------|-Service1
+      UE--|RAN|---|  PE  |&lt;----------------------|  PE  |---|  Service | Instance
+          +---+   +------+&lt;---------------\      +------+   |   Site A | (CS-ID S1)
+      UE-/        | C-PS | DSD B           \            |   +----------+ (CIS-ID S1A)
+                  +------+                  \           |
+                  |                          \          |
+                  |                           \         |
+                  |     MUP network            \ +------+   +----------+
+                  |      +-------+              \|  PE  |---|  Service |
+                  |      | C-NMA |               +------+   |   Site B |-Service1
+                  |      +-------+                      |   |----------| Instance
+                  +-------------------------------------+   |   C-SMA  | (CS-ID S1)
+                                                            +----------+ (CIS-ID S1B)
+
+
+
+</pre>
+</div>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-cats-mup-distributed-deploym" class="selfRef">CATS-MUP Distributed deployment option</a>
+            </figcaption></figure>
+</div>
+<p id="section-4.2.2-2">Figure 5 describes the CATS-MUP Distributed deployment architecture. This option has the following key features:<a href="#section-4.2.2-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.2.2-3.1">The DSD routes periodically advertise service, service instance identity information (CS-ID and CIS-ID) and CATS metrics from the Service Site PEs to the RAN PEs.<a href="#section-4.2.2-3.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.2.2-3.2">The T2ST routes provides the UE session information and requested service CS-ID to the RAN-PE.<a href="#section-4.2.2-3.2" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.2.2-3.3">The C-PS at the RAN-PE selects the optimal service instance based on current CATS metrics provided from the DSD routes.<a href="#section-4.2.2-3.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+<section id="section-4.2.3">
+          <h4 id="name-new-ue-request-underlay-routi">
+<a href="#section-4.2.3" class="section-number selfRef">4.2.3. </a><a href="#name-new-ue-request-underlay-routi" class="section-name selfRef">New UE request underlay routing setup procedure</a>
+          </h4>
+<span id="name-new-ue-request-underlay-routin"></span><div id="catmup-dis-newue-proc">
+<figure id="figure-5">
+            <div class="alignLeft art-text artwork" id="section-4.2.3-1.1">
+<pre>
++----+  +----+  +-----+  +-----+  +-----+
+| UE |  |RAN1|  |     |  |SiteA|  |SiteB|
+|    |  | PE |  |MUP-C|  | PE  |  | PE  |
++----+  +----+  +-----+  +-----+  +-----+
+  |       |       |        |        |
+  |       0.DSD (periodically advertised)
+  |       (CS-ID S1, CIS-ID S1A, SiteA PE SID, CATS metrics)
+  |       (CS-ID S1, CIS-ID S1B, SiteB PE SID, CATS metrics)
+  |       |&lt;---------------|        |
+  |       |&lt;------------------------|
+  |       |       |        |        |
+  1. UE request session establishment
+  MUP-C recieves UE session information
+  |       |       |        |        |
+  |      2.TS2T
+  |      (CS-ID S1, TEID)
+  |       |&lt;------|        |        |
+  |       |       |        |        |
+  3. C-PS at RAN1 PE determines service instance CIS-ID S1A
+  as the optimal one, use the DSD route that has CIS-ID S1A
+  to route UE request
+  |------&gt;|---------------&gt;|        |
+  |       |       |        |        |
+  4. In case of optimal service instance change
+  to SiteB based on current metrics
+  |       |       |        |        |
+  5. C-PS at RAN1 PE determines service instance CIS-ID S1B
+  as the optimal one, use the DSD route that has CIS-ID S1B
+  to route UE request
+  |------&gt;|------------------------&gt;|
+
+
+</pre>
+</div>
+<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
+<a href="#name-new-ue-request-underlay-routin" class="selfRef">New UE request underlay routing setup procedure</a>
+            </figcaption></figure>
+</div>
+<p id="section-4.2.3-2">Figure 6 describes the sequence of how the CATS-MUP Distributed deployment approach setup the underlay routing path for an UE request.<a href="#section-4.2.3-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.2.3-3.1">DSD routes are advertised from the PEs of the service sites that hosts the service instances to all of the RAN PEs. Because CATS metrics are periodically updated, these routes are also periodically advertises to the RAN PEs with the latest CATS metrics alongside the service, service instance identities (CS-ID, CIS-ID) and the PE SRv6 SID.<a href="#section-4.2.3-3.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.2.3-3.2">When a UE request session establishment to the mobile management system, the MUP-C recieves the session information which includes the requested service CS-ID and the TEID of the session. The MUP-C provides this information to the RAN PEs via the T2ST routes.<a href="#section-4.2.3-3.2" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.2.3-3.3">Upon recieving the T2ST route, the C-PS at the RAN PE selects optimal service instance for the requested service (identified by the CS-ID) based on the current CATS metrics of the service advertised from the DSD routes. The RAN PE uses the D2D route that has the optimal service instance CIS-ID for steering the UE traffic to the optimal service site.<a href="#section-4.2.3-3.3" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.2.3-3.4">In case of the optimal service instance change to another site (SiteB in this example) due to current CATS metrics update, the C-PS at the RAN-PE selects a new optimal service instance based on current CATS metrics. Then, the RAN PE uses the corresponding DSD route of the new optimal service instance to route the UE request.<a href="#section-4.2.3-3.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+<section id="section-4.2.4">
+          <h4 id="name-ue-mobility-handling-procedur">
+<a href="#section-4.2.4" class="section-number selfRef">4.2.4. </a><a href="#name-ue-mobility-handling-procedur" class="section-name selfRef">UE mobility handling procedure</a>
+          </h4>
+<span id="name-ue-mobility-handling-procedure"></span><div id="catmup-dis-mob-proc">
+<figure id="figure-6">
+            <div class="alignLeft art-text artwork" id="section-4.2.4-1.1">
+<pre>
++----+  +----+ +----+ +-----+  +-----+  +-----+
+| UE |  |RAN1| |RAN2| |CATS |  |SiteA|  |SiteB|
+|    |  | PE | | PE | |MUP-C|  | PE  |  | PE  |
++----+  +----+ +----+ +-----+  +-----+  +-----+
+  |       |       |      |        |        |
+  |       0.DSD (periodically advertised)
+  |       (CS-ID S1, CIS-ID S1A, SiteA PE SID, CATS metrics)
+  |       (CS-ID S1, CIS-ID S1B, SiteB PE SID, CATS metrics)
+  |       |&lt;----------------------|        |
+  |       |&lt;-------------------------------|
+  |       0.DSD (periodically advertised)
+  |       (CS-ID S1, CIS-ID S1A, SiteA PE SID, CATS metrics)
+  |       (CS-ID S1, CIS-ID S1B, SiteB PE SID, CATS metrics)
+  |       |       |&lt;--------------|        |
+  |       |       |&lt;-----------------------|
+  |       |       |      |        |        |
+     UE traffic is currently routed
+          from RAN1 to SiteA
+  |------&gt;|----------------------&gt;|        |
+  |       |       |      |        |        |
+  2.UE moves to RAN2
+  MUP-C recieves modified UE session information
+  |       |       |      |        |        |
+  |      3a.(If stateful service support required)
+  |      Send TS2T map to previous service instance
+  |      (CS-ID S1, CIS-ID S1A, TEID)
+  |       |       |&lt;-----|        |        |
+  |      3a.After stateful migration/previous
+  |      packet flow is completed
+  |       |       |      |        |        |
+  |      3.TS2T
+  |      (CS-ID S1, TEID)
+  |       |       |      |        |        |
+  |       |       |&lt;-----|        |        |
+  4. C-PS at RAN2 PE determines service instance CIS-ID S1B
+  as the optimal one, use the DSD route that has CIS-ID S1B
+  to route UE request
+  |--------------&gt;|-----------------------&gt;|
+
+
+</pre>
+</div>
+<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
+<a href="#name-ue-mobility-handling-procedure" class="selfRef">UE mobility handling procedure</a>
+            </figcaption></figure>
+</div>
+<p id="section-4.2.4-2">Figure 7 describes the sequence of how the CATS-MUP Distributed deployment approach setup the underlay routing path when UE moves to a new RAN.<a href="#section-4.2.4-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.2.4-3.1">DSD routes are periodically advertised from service site PEs to all RAN PEs with the corresponding CATS metrics<a href="#section-4.2.4-3.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.2.4-3.2">When UE moves to a different RAN, the MUP-C recieves modified UE session information from the mobility management system, and provided the session information TEID and the requested service CS-ID to the new RAN PE via the T2ST route.<a href="#section-4.2.4-3.2" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.2.4-3.3">The C-PS at the new RAN PE selects new optimal service instance based on current CATS metrics provided by the DSD routes. Then it uses the DSD route that maps to the optimal service instance CIS-ID to route the UE request.<a href="#section-4.2.4-3.3" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.2.4-3.4">In case of stateful/sticky service support are required, where connection to the previous service instance need to be maintained, the MUP-C should firstly send a special T2ST route that additionally contains the previous service instance CIS-ID information. The RAN-PE then uses the DSD route that maps to the previous instance CIS-ID. Then, depends on the session continuity policy, the CATS-MUP-C can update the PE with a normal T2ST route later. For example, new TS2T can be sent to PE after service packet flow to the previous instance is completed or after service state migration is completed. Once the RAN-PE receives the normal T2ST route, it uses the DSD route that maps to the optimal service instance CIS-ID to route the UE request.<a href="#section-4.2.4-3.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+</section>
+</section>
+</section>
+</div>
+<section id="section-5">
+      <h2 id="name-references">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<section id="section-5.1">
+        <h3 id="name-informative-references">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="I-D.draft-ietf-cats-framework">[I-D.draft-ietf-cats-framework]</dt>
+        <dd>
+<span class="refAuthor">Li, C.</span>, <span class="refAuthor">Du, Z.</span>, <span class="refAuthor">Boucadair, M.</span>, <span class="refAuthor">Contreras, L. M.</span>, and <span class="refAuthor">J. Drake</span>, <span class="refTitle">"A Framework for Computing-Aware Traffic Steering (CATS)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cats-framework</span>, <time datetime="2026-02-17" class="refDate">17 February 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-cats-framework/">https://datatracker.ietf.org/doc/draft-ietf-cats-framework/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.draft-ietf-cats-metric-definition">[I-D.draft-ietf-cats-metric-definition]</dt>
+        <dd>
+<span class="refAuthor">Yao, K.</span>, <span class="refAuthor">Li, C.</span>, <span class="refAuthor">Contreras, L.M.</span>, <span class="refAuthor">Ros-Giralt, J.</span>, and <span class="refAuthor">G. Zeng</span>, <span class="refTitle">"CATS Metrics Definition"</span>, <time datetime="2026-02-02" class="refDate">2 February 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-cats-metric-definition/">https://datatracker.ietf.org/doc/draft-ietf-cats-metric-definition/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.draft-ietf-cats-usecases-requirements">[I-D.draft-ietf-cats-usecases-requirements]</dt>
+        <dd>
+<span class="refAuthor">Yao, K.</span>, <span class="refAuthor">Contreras, L.M.</span>, <span class="refAuthor">Shi, H.</span>, <span class="refAuthor">Zhang, S.</span>, and <span class="refAuthor">Q. An</span>, <span class="refTitle">"Mobile User Plane Architecture using Segment Routing for Distributed Mobility Management"</span>, <time datetime="2026-02-04" class="refDate">4 February 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-cats-usecases-requirements/">https://datatracker.ietf.org/doc/draft-ietf-cats-usecases-requirements/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.draft-ietf-dmm-mup-architecture">[I-D.draft-ietf-dmm-mup-architecture]</dt>
+        <dd>
+<span class="refAuthor">Matsushima, S.</span>, <span class="refAuthor">Horiba, K.</span>, <span class="refAuthor">Kawakami, Y.</span>, <span class="refAuthor">Murakami, T.</span>, <span class="refAuthor">Patel, K.</span>, and <span class="refAuthor">J. Horn</span>, <span class="refTitle">"Mobile User Plane Architecture using Segment Routing for Distributed Mobility Management"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, ietf-dmm-mup-architecture</span>, <time datetime="2025-10-20" class="refDate">20 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-dmm-mup-architecture/">https://datatracker.ietf.org/doc/draft-ietf-dmm-mup-architecture/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.draft-ietf-dmm-srv6mob-arch">[I-D.draft-ietf-dmm-srv6mob-arch]</dt>
+        <dd>
+<span class="refAuthor">Kamata, T.</span>, <span class="refAuthor">Horn, J.</span>, <span class="refAuthor">Jalil, L.</span>, <span class="refAuthor">Cheng, W.</span>, and <span class="refAuthor">M. Kohno</span>, <span class="refTitle">"Architecture Discussion on SRv6 Mobile User plane"</span>, <time datetime="2025-09-02" class="refDate">2 September 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-dmm-srv6mob-arch/">https://datatracker.ietf.org/doc/draft-ietf-dmm-srv6mob-arch/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.draft-ietf-idr-5g-edge-service-metadata">[I-D.draft-ietf-idr-5g-edge-service-metadata]</dt>
+        <dd>
+<span class="refAuthor">Dunbar, L.</span>, <span class="refAuthor">Majumdar, K.</span>, <span class="refAuthor">Li, C.</span>, <span class="refAuthor">Mishra, G.</span>, and <span class="refAuthor">Z. Du</span>, <span class="refTitle">"BGP Extension for 5G Edge Service Metadata"</span>, <time datetime="2025-09-18" class="refDate">18 September 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-idr-5g-edge-service-metadata/">https://datatracker.ietf.org/doc/draft-ietf-idr-5g-edge-service-metadata/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.draft-lin-idr-distribute-service-metric">[I-D.draft-lin-idr-distribute-service-metric]</dt>
+        <dd>
+<span class="refAuthor">Lin, C.</span>, <span class="refAuthor">Yao, H.</span>, and <span class="refAuthor">Q. Xiong</span>, <span class="refTitle">"Distribute Service Metric By BGP"</span>, <time datetime="2025-12-21" class="refDate">21 December 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-lin-idr-distribute-service-metric/">https://datatracker.ietf.org/doc/draft-lin-idr-distribute-service-metric/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="ieee-access-cats-mup">[ieee-access-cats-mup]</dt>
+        <dd>
+<span class="refAuthor">Tran, M-N.</span>, <span class="refAuthor">Duong, V-B.</span>, and <span class="refAuthor">Y. Kim</span>, <span class="refTitle">"Design of Computing-Aware Traffic Steering Architecture for 5G Mobile User Plane"</span>, <time datetime="2024-06-24" class="refDate">24 June 2024</time>, <span>&lt;<a href="https://doi.org/10.1109/ACCESS.2024.3418960">https://doi.org/10.1109/ACCESS.2024.3418960</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC4786">[RFC4786]</dt>
+        <dd>
+<span class="refAuthor">Abley, J.</span> and <span class="refAuthor">K. Lindqvist</span>, <span class="refTitle">"Operation of Anycast Services"</span>, <time datetime="2006-12" class="refDate">December 2006</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/rfc4786/">https://datatracker.ietf.org/doc/rfc4786/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7333">[RFC7333]</dt>
+      <dd>
+<span class="refAuthor">Chan, A.</span>, <span class="refAuthor">Liu, D.</span>, <span class="refAuthor">Seite, P.</span>, <span class="refAuthor">Yokota, H.</span>, and <span class="refAuthor">J. Korhonen</span>, <span class="refTitle">"Requirements for Distributed Mobility Management"</span>, <time datetime="2014-08" class="refDate">August 2014</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/rfc7333/">https://datatracker.ietf.org/doc/rfc7333/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</section>
+<div id="authors-addresses">
+<section id="appendix-A">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Minh-Ngoc Tran</span></div>
+<div dir="auto" class="left"><span class="org">Soongsil University</span></div>
+<div dir="auto" class="left"><span class="street-address">369, Sangdo-ro, Dongjak-gu</span></div>
+<div dir="auto" class="left"><span class="locality">Seoul</span></div>
+<div dir="auto" class="left"><span class="postal-code">06978</span></div>
+<div dir="auto" class="left"><span class="country-name">Republic of Korea</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:mipearlska1307@dcn.ssu.ac.kr" class="email">mipearlska1307@dcn.ssu.ac.kr</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Kiem Nguyen Trung</span></div>
+<div dir="auto" class="left"><span class="org">Soongsil University</span></div>
+<div dir="auto" class="left"><span class="street-address">369, Sangdo-ro, Dongjak-gu</span></div>
+<div dir="auto" class="left"><span class="locality">Seoul</span></div>
+<div dir="auto" class="left"><span class="postal-code">06978</span></div>
+<div dir="auto" class="left"><span class="country-name">Republic of Korea</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:kiemnt@dcn.ssu.ac.kr" class="email">kiemnt@dcn.ssu.ac.kr</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Younghan Kim</span></div>
+<div dir="auto" class="left"><span class="org">Soongsil University</span></div>
+<div dir="auto" class="left"><span class="street-address">369, Sangdo-ro, Dongjak-gu</span></div>
+<div dir="auto" class="left"><span class="locality">Seoul</span></div>
+<div dir="auto" class="left"><span class="postal-code">06978</span></div>
+<div dir="auto" class="left"><span class="country-name">Republic of Korea</span></div>
+<div class="tel">
+<span>Phone:</span>
+<a href="tel:+82%2010%202691%200904" class="tel">+82 10 2691 0904</a>
+</div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:younghak@ssu.ac.kr" class="email">younghak@ssu.ac.kr</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
