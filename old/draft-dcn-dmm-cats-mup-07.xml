@@ -62,7 +62,7 @@
         <email>younghak@ssu.ac.kr</email>
       </address>
     </author>
-    <date year="2026"/>
+    <date year="2025"/>
     <area>Routing Area</area>
     <workgroup>Distributed Mobility Management</workgroup>
     <!-- [rfced] Please insert any keywords (beyond those that appear in
@@ -488,7 +488,36 @@ the title) for use on http://www.rfc-editor.org/rfcsearch.html. -->
      </section>
     </section>
 
-</middle>
+    <section anchor="service-segmentation">
+      <name>Supporting Service Segmentation with CATS-MUP</name>
+      <t>Emerging 6G services, such as distributed artificial intelligence (AI) inference and extended reality (XR), are increasingly deployed using a service segmentation model, where a service is decomposed into multiple subtasks distributed across different edge locations. These subtasks may be executed sequentially, forming a service pipeline, or in parallel, depending on application logic and performance requirements. Such service models introduce additional traffic steering requirements beyond the conventional single-service-instance paradigm, as discussed in <xref target="draft-dcn-cats-req-service-segmentation-02"/></t>
+      <t>While CATS-MUP primarily targets optimal service instance selection for a single service endpoint, its architecture can be naturally extended to support traffic steering for segmented services by leveraging the flexibility of SRv6-based Mobile User Plane (MUP) routing.</t>
+      <t>In a service segmentation scenario, an end-to-end service request may need to be processed by multiple service instances following a predefined execution structure, such as a sequential pipeline or a parallel processing graph. Compared to the conventional single-instance service model, the network must be aware of the service execution structure and steer traffic accordingly across multiple service instances.</t>
+      <t>From a traffic steering perspective, supporting service segmentation with CATS-MUP introduces several additional considerations, including the ability to associate a service request with a set of service instances rather than a single instance, the ability to express ordering or dependency relationships among service instances (particularly for sequential service pipelines), and the ability to dynamically adapt traffic steering paths when service instance availability, computing conditions, or user mobility changes.</t>
+
+      <section>
+        <name>MUP Enhancement Considerations for Supporting Sequential Service Pipelines</name>
+        <t>In a sequential service pipeline, service requests are processed by a series of service instances in a predefined order, where the output of one subtask becomes the input to the next. Supporting such execution semantics requires the traffic steering mechanism to explicitly encode service ordering information and ensure that packets traverse the corresponding service instances in sequence.</t>
+        <t>To address this requirement, the MUP architecture can be enhanced by introducing a <em>Sequence Session Transform Route</em>, which enables the Mobile User Plane to steer traffic through multiple service instances in a specified order using SRv6-based routing constructs. In this approach, a service pipeline is represented as an ordered set of processing stages, and the MUP encodes the execution sequence into the SRv6 Segment Routing Header (SRH) by leveraging SRv6 Service Function Chaining (SFC) mechanisms, as specified in <xref target="RFC9491"/>.</t>
+        <t>Such a mechanism enables flexible and scalable realization of sequential service pipelines, while preserving the core design principles of CATS-MUP. This enhancement allows the control plane to dynamically update the service execution sequence in response to changes in computing or network conditions, without interrupting ongoing user sessions. Further details and design considerations of the <em>Sequence Session Transform Route</em> are described in <xref target="ieee-access-traffic-steering-service-segmentation"/>.</t>
+      </section>
+
+      <section>
+        <name>Supporting Parallel Service Pipelines via MUP</name>
+        <t>In addition to sequential pipelines, service segmentation may involve parallel execution structures, where a service request is split into multiple subtasks that are processed concurrently by different service instances and later merged to produce the final result. Such execution models are common in distributed AI inference and data-intensive applications, and their requirements are further discussed in <xref target="draft-dcn-cats-req-service-segmentation-02"/>.</t>
+        <t>From a traffic steering perspective, parallel service pipelines introduce the need for Merge/Split function, which logically decompose incoming service requests into multiple parallel flows and aggregate their outputs before delivering the final response to the user. The function may be implemented as part of the application logic or as dedicated service functions within the network.</t>
+        <t>Within the MUP framework, existing Session Transform Routes, including Type 1 and Type 2 routes, are sufficient to support parallel service pipelines. By steering different traffic branches toward their corresponding service instances and subsequently merging them at a designated aggregation point, MUP can support parallel execution without requiring additional routing primitives.</t>
+      </section>
+
+      <section>
+        <name>Enabling Service Continuity for Stateful Service Segmentation via MUP</name>
+        <t>In practical deployments, service segmentation often involves stateful service instances, where execution state must be preserved across service instance relocation or pipeline reconfiguration. In such scenarios, immediate redirection of traffic to a newly selected service pipeline may result in service disruption if the target instances are not yet ready to process incoming requests or if state migration is still in progress.</t>
+        <t>For example, consider a sequential service pipeline in which the final subtask maintains application state. When this stateful subtask is migrated due to mobility events or computing resource degradation, packets processed by upstream subtasks may reach the stateful subtask before migration is completed. As a result, these packets may be dropped or fail to be processed correctly, leading to wasted computing resources and unnecessary consumption of network bandwidth.</t>
+        <t>To mitigate such issues, the MUP architecture can be extended with a service continuity mechanism based on SRv6-assisted buffering. In this approach, packets destined for a stateful service instance undergoing migration are temporarily buffered by an intermediate SRv6 processing function. Once the target service instance becomes ready and state migration is completed, buffered packets can be forwarded to the restored service pipeline. This buffering-based approach allows service continuity to be preserved during pipeline reconfiguration or service relocation, without requiring changes to the application-layer protocol or tight coupling with service-specific logic.</t>
+        <t>By combining SRv6-based buffering with coordinated control-plane procedures, CATS-MUP can provide a practical and deployable foundation for supporting service continuity in stateful service segmentation scenarios, as further demonstrated in <xref target="ieee-access-service-continuity-service-segmentation"/>.</t>
+      </section>
+    </section>
+  </middle>
 
   <back>
     <references>
@@ -513,7 +542,13 @@ the title) for use on http://www.rfc-editor.org/rfcsearch.html. -->
             <author fullname="John Drake" initials="J." surname="Drake">
               <organization>Juniper Networks, Inc.</organization>
             </author>
-            <date day="17" month="February" year="2026"/>
+            <author fullname="Daniel Huang" initials="D." surname="Huang">
+              <organization>ZTE</organization>
+            </author>
+            <author fullname="Gyan Mishra" initials="G. S." surname="Mishra">
+              <organization>Verizon Inc.</organization>
+            </author>
+            <date day="10" month="February" year="2025"/>
           </front>
           <seriesInfo name="Internet-Draft" value="draft-ietf-cats-framework"/>
         </reference>
@@ -527,7 +562,7 @@ the title) for use on http://www.rfc-editor.org/rfcsearch.html. -->
             <author initials="T." surname="Murakami"></author>
             <author initials="K." surname="Patel"></author>
             <author initials="J." surname="Horn"></author>
-            <date day="20" month="October" year="2025"/>
+            <date day="30" month="May" year="2025"/>
           </front>
           <seriesInfo name="Internet-Draft" value="ietf-dmm-mup-architecture"/>
         </reference>
@@ -535,12 +570,12 @@ the title) for use on http://www.rfc-editor.org/rfcsearch.html. -->
         <reference anchor="I-D.draft-ietf-dmm-srv6mob-arch" target="https://datatracker.ietf.org/doc/draft-ietf-dmm-srv6mob-arch/">
           <front>
             <title>Architecture Discussion on SRv6 Mobile User plane</title>
-            <author initials="T." surname="Kamata"></author>
-            <author initials="J." surname="Horn"></author>
-            <author initials="L." surname="Jalil"></author>
-            <author initials="W." surname="Cheng"></author>
             <author initials="M." surname="Kohno"></author>
-            <date day="02" month="September" year="2025"/>
+            <author initials="F." surname="Clad"></author>
+            <author initials="P." surname="Camarillo"></author>
+            <author initials="Z." surname="Ali"></author>
+            <author initials="L." surname="Jalil"></author>
+            <date day="15" month="February" year="2024"/>
           </front>
         </reference>
 
@@ -548,23 +583,26 @@ the title) for use on http://www.rfc-editor.org/rfcsearch.html. -->
           <front>
             <title>Mobile User Plane Architecture using Segment Routing for Distributed Mobility Management</title>
             <author initials="K." surname="Yao"></author>
-            <author initials="L.M." surname="Contreras"></author>
+            <author initials="D." surname="Trossen"></author>
+            <author initials="M." surname="Boucadair"></author>
+            <author initials="LM." surname="Contreras"></author>
             <author initials="H." surname="Shi"></author>
+            <author initials="Y." surname="Li"></author>
             <author initials="S." surname="Zhang"></author>
             <author initials="Q." surname="An"></author>
-            <date day="04" month="February" year="2026"/>
+            <date day="14" month="February" year="2025"/>
           </front>
         </reference>
 
         <reference anchor="I-D.draft-ietf-cats-metric-definition" target="https://datatracker.ietf.org/doc/draft-ietf-cats-metric-definition/">
           <front>
-            <title>CATS Metrics Definition</title>
+            <title>Mobile User Plane Architecture using Segment Routing for Distributed Mobility Management</title>
             <author initials="K." surname="Yao"></author>
+            <author initials="H." surname="Shi"></author>
             <author initials="C." surname="Li"></author>
-            <author initials="L.M." surname="Contreras"></author>
+            <author initials="LM." surname="Contreras"></author>
             <author initials="J." surname="Ros-Giralt"></author>
-            <author initials="G." surname="Zeng"></author>
-            <date day="02" month="February" year="2026"/>
+            <date day="5" month="February" year="2025"/>
           </front>
         </reference>
 
@@ -573,20 +611,19 @@ the title) for use on http://www.rfc-editor.org/rfcsearch.html. -->
             <title>Distribute Service Metric By BGP</title>
             <author initials="C." surname="Lin"></author>
             <author initials="H." surname="Yao"></author>
-            <author initials="Q." surname="Xiong"></author>
-            <date day="21" month="December" year="2025"/>
+            <date day="6" month="June" year="2024"/>
           </front>
         </reference>
 
         <reference anchor="I-D.draft-ietf-idr-5g-edge-service-metadata" target="https://datatracker.ietf.org/doc/draft-ietf-idr-5g-edge-service-metadata/">
           <front>
-            <title>BGP Extension for 5G Edge Service Metadata</title>
+            <title>Distribute Service Metric By BGP</title>
             <author initials="L." surname="Dunbar"></author>
             <author initials="K." surname="Majumdar"></author>
             <author initials="C." surname="Li"></author>
             <author initials="G." surname="Mishra"></author>
             <author initials="Z." surname="Du"></author>
-            <date day="18" month="September" year="2025"/>
+            <date day="22" month="July" year="2024"/>
           </front>
         </reference>
 
@@ -612,12 +649,48 @@ the title) for use on http://www.rfc-editor.org/rfcsearch.html. -->
         <reference anchor="RFC7333" target="https://datatracker.ietf.org/doc/rfc7333/">
           <front>
             <title>Requirements for Distributed Mobility Management</title>
-            <author initials="A." surname="Chan"></author>
+            <author initials="H." surname="Chan"></author>
             <author initials="D." surname="Liu"></author>
             <author initials="P." surname="Seite"></author>
             <author initials="H." surname="Yokota"></author>
             <author initials="J." surname="Korhonen"></author>
             <date month="August" year="2014"/>
+          </front>
+        </reference>
+
+        <reference anchor="RFC9491" target="https://datatracker.ietf.org/doc/rfc9491/">
+          <front>
+            <title>Integration of the Network Service Header (NSH) and Segment Routing for Service Function Chaining (SFC)</title>
+            <author initials="J." surname="Guichard"></author>
+            <author initials="J." surname="Tantsura"></author>
+            <date month="November" year="2023"/>
+          </front>
+        </reference>
+
+        <reference anchor="draft-dcn-cats-req-service-segmentation-02" target="https://datatracker.ietf.org/doc/draft-dcn-cats-req-service-segmentation/02/">
+          <front>
+            <title>Additional CATS requirements consideration for Service Segmentation-related use cases</title>
+            <author initials="M-N." surname="Tran"></author>
+            <author initials="Y" surname="Kim"></author>
+            <date month="July" year="2025"/>
+          </front>
+        </reference>
+        <reference anchor="ieee-access-traffic-steering-service-segmentation" target="https://doi.org/10.1109/ACCESS.2025.3630182">
+          <front>
+            <title>Design of 5G Architecture Enhancements for Supporting Edge Split Computing Service Pipeline</title>
+            <author initials="M-N." surname="Tran"></author>
+            <author initials="K." surname="Nguyen-Trung"></author>
+            <author initials="Y" surname="Kim"></author>
+            <date month="July" year="2025"/>
+          </front>
+        </reference>
+        <reference anchor="ieee-access-service-continuity-service-segmentation" target="https://doi.org/10.1109/ACCESS.2026.3661972">
+          <front>
+            <title>Enabling Service Continuity for Stateful Service Segmentation in Mobile Edge Computing toward 6G</title>
+            <author initials="K." surname="Nguyen-Trung"></author>
+            <author initials="M-N." surname="Tran"></author>
+            <author initials="Y" surname="Kim"></author>
+            <date month="July" year="2025"/>
           </front>
         </reference>
       </references>

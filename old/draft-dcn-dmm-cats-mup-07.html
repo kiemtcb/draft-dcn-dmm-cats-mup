@@ -14,7 +14,7 @@
     " name="description">
 <meta content="xml2rfc 3.31.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
-<meta content="draft-dcn-dmm-cats-mup-06" name="ietf.draft">
+<meta content="draft-dcn-dmm-cats-mup-07" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.31.0
     Python 3.10.12
@@ -1222,7 +1222,7 @@ li > p:last-of-type:only-child {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tran, et al.</td>
-<td class="center">Expires 27 August 2025</td>
+<td class="center">Expires 13 August 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1232,15 +1232,15 @@ li > p:last-of-type:only-child {
 <dt class="label-workgroup">Workgroup:</dt>
 <dd class="workgroup">Distributed Mobility Management</dd>
 <dt class="label-internet-draft">Internet-Draft:</dt>
-<dd class="internet-draft">draft-dcn-dmm-cats-mup-06</dd>
+<dd class="internet-draft">draft-dcn-dmm-cats-mup-07</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-02-23" class="published">23 February 2025</time>
+<time datetime="2025-02-09" class="published">9 February 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-08-27">27 August 2025</time></dd>
+<dd class="expires"><time datetime="2025-08-13">13 August 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1283,7 +1283,7 @@ li > p:last-of-type:only-child {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 27 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 13 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1361,15 +1361,29 @@ li > p:last-of-type:only-child {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
-            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-references" class="internal xref">References</a></p>
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-supporting-service-segmenta" class="internal xref">Supporting Service Segmentation with CATS-MUP</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
-                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-mup-enhancement-consideratio" class="internal xref">MUP Enhancement Considerations for Supporting Sequential Service Pipelines</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-supporting-parallel-service" class="internal xref">Supporting Parallel Service Pipelines via MUP</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-enabling-service-continuity" class="internal xref">Enabling Service Continuity for Stateful Service Segmentation via MUP</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1876,54 +1890,106 @@ li > p:last-of-type:only-child {
 </section>
 </section>
 </div>
+<div id="service-segmentation">
 <section id="section-5">
-      <h2 id="name-references">
-<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-references" class="section-name selfRef">References</a>
+      <h2 id="name-supporting-service-segmenta">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-supporting-service-segmenta" class="section-name selfRef">Supporting Service Segmentation with CATS-MUP</a>
       </h2>
+<p id="section-5-1">Emerging 6G services, such as distributed artificial intelligence (AI) inference and extended reality (XR), are increasingly deployed using a service segmentation model, where a service is decomposed into multiple subtasks distributed across different edge locations. These subtasks may be executed sequentially, forming a service pipeline, or in parallel, depending on application logic and performance requirements. Such service models introduce additional traffic steering requirements beyond the conventional single-service-instance paradigm, as discussed in <span>[<a href="#draft-dcn-cats-req-service-segmentation-02" class="cite xref">draft-dcn-cats-req-service-segmentation-02</a>]</span><a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">While CATS-MUP primarily targets optimal service instance selection for a single service endpoint, its architecture can be naturally extended to support traffic steering for segmented services by leveraging the flexibility of SRv6-based Mobile User Plane (MUP) routing.<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-3">In a service segmentation scenario, an end-to-end service request may need to be processed by multiple service instances following a predefined execution structure, such as a sequential pipeline or a parallel processing graph. Compared to the conventional single-instance service model, the network must be aware of the service execution structure and steer traffic accordingly across multiple service instances.<a href="#section-5-3" class="pilcrow">¶</a></p>
+<p id="section-5-4">From a traffic steering perspective, supporting service segmentation with CATS-MUP introduces several additional considerations, including the ability to associate a service request with a set of service instances rather than a single instance, the ability to express ordering or dependency relationships among service instances (particularly for sequential service pipelines), and the ability to dynamically adapt traffic steering paths when service instance availability, computing conditions, or user mobility changes.<a href="#section-5-4" class="pilcrow">¶</a></p>
 <section id="section-5.1">
+        <h3 id="name-mup-enhancement-consideratio">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-mup-enhancement-consideratio" class="section-name selfRef">MUP Enhancement Considerations for Supporting Sequential Service Pipelines</a>
+        </h3>
+<p id="section-5.1-1">In a sequential service pipeline, service requests are processed by a series of service instances in a predefined order, where the output of one subtask becomes the input to the next. Supporting such execution semantics requires the traffic steering mechanism to explicitly encode service ordering information and ensure that packets traverse the corresponding service instances in sequence.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-2">To address this requirement, the MUP architecture can be enhanced by introducing a <em>Sequence Session Transform Route</em>, which enables the Mobile User Plane to steer traffic through multiple service instances in a specified order using SRv6-based routing constructs. In this approach, a service pipeline is represented as an ordered set of processing stages, and the MUP encodes the execution sequence into the SRv6 Segment Routing Header (SRH) by leveraging SRv6 Service Function Chaining (SFC) mechanisms, as specified in <span>[<a href="#RFC9491" class="cite xref">RFC9491</a>]</span>.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+<p id="section-5.1-3">Such a mechanism enables flexible and scalable realization of sequential service pipelines, while preserving the core design principles of CATS-MUP. This enhancement allows the control plane to dynamically update the service execution sequence in response to changes in computing or network conditions, without interrupting ongoing user sessions. Further details and design considerations of the <em>Sequence Session Transform Route</em> are described in <span>[<a href="#ieee-access-traffic-steering-service-segmentation" class="cite xref">ieee-access-traffic-steering-service-segmentation</a>]</span>.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
+</section>
+<section id="section-5.2">
+        <h3 id="name-supporting-parallel-service">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-supporting-parallel-service" class="section-name selfRef">Supporting Parallel Service Pipelines via MUP</a>
+        </h3>
+<p id="section-5.2-1">In addition to sequential pipelines, service segmentation may involve parallel execution structures, where a service request is split into multiple subtasks that are processed concurrently by different service instances and later merged to produce the final result. Such execution models are common in distributed AI inference and data-intensive applications, and their requirements are further discussed in <span>[<a href="#draft-dcn-cats-req-service-segmentation-02" class="cite xref">draft-dcn-cats-req-service-segmentation-02</a>]</span>.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">From a traffic steering perspective, parallel service pipelines introduce the need for Merge/Split function, which logically decompose incoming service requests into multiple parallel flows and aggregate their outputs before delivering the final response to the user. The function may be implemented as part of the application logic or as dedicated service functions within the network.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.2-3">Within the MUP framework, existing Session Transform Routes, including Type 1 and Type 2 routes, are sufficient to support parallel service pipelines. By steering different traffic branches toward their corresponding service instances and subsequently merging them at a designated aggregation point, MUP can support parallel execution without requiring additional routing primitives.<a href="#section-5.2-3" class="pilcrow">¶</a></p>
+</section>
+<section id="section-5.3">
+        <h3 id="name-enabling-service-continuity">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-enabling-service-continuity" class="section-name selfRef">Enabling Service Continuity for Stateful Service Segmentation via MUP</a>
+        </h3>
+<p id="section-5.3-1">In practical deployments, service segmentation often involves stateful service instances, where execution state must be preserved across service instance relocation or pipeline reconfiguration. In such scenarios, immediate redirection of traffic to a newly selected service pipeline may result in service disruption if the target instances are not yet ready to process incoming requests or if state migration is still in progress.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.3-2">For example, consider a sequential service pipeline in which the final subtask maintains application state. When this stateful subtask is migrated due to mobility events or computing resource degradation, packets processed by upstream subtasks may reach the stateful subtask before migration is completed. As a result, these packets may be dropped or fail to be processed correctly, leading to wasted computing resources and unnecessary consumption of network bandwidth.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
+<p id="section-5.3-3">To mitigate such issues, the MUP architecture can be extended with a service continuity mechanism based on SRv6-assisted buffering. In this approach, packets destined for a stateful service instance undergoing migration are temporarily buffered by an intermediate SRv6 processing function. Once the target service instance becomes ready and state migration is completed, buffered packets can be forwarded to the restored service pipeline. This buffering-based approach allows service continuity to be preserved during pipeline reconfiguration or service relocation, without requiring changes to the application-layer protocol or tight coupling with service-specific logic.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+<p id="section-5.3-4">By combining SRv6-based buffering with coordinated control-plane procedures, CATS-MUP can provide a practical and deployable foundation for supporting service continuity in stateful service segmentation scenarios, as further demonstrated in <span>[<a href="#ieee-access-service-continuity-service-segmentation" class="cite xref">ieee-access-service-continuity-service-segmentation</a>]</span>.<a href="#section-5.3-4" class="pilcrow">¶</a></p>
+</section>
+</section>
+</div>
+<section id="section-6">
+      <h2 id="name-references">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<section id="section-6.1">
         <h3 id="name-informative-references">
-<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
+<dt id="draft-dcn-cats-req-service-segmentation-02">[draft-dcn-cats-req-service-segmentation-02]</dt>
+        <dd>
+<span class="refAuthor">Tran, M-N.</span> and <span class="refAuthor">Y. Kim</span>, <span class="refTitle">"Additional CATS requirements consideration for Service Segmentation-related use cases"</span>, <time datetime="2025-07" class="refDate">July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-dcn-cats-req-service-segmentation/02/">https://datatracker.ietf.org/doc/draft-dcn-cats-req-service-segmentation/02/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="I-D.draft-ietf-cats-framework">[I-D.draft-ietf-cats-framework]</dt>
         <dd>
-<span class="refAuthor">Li, C.</span>, <span class="refAuthor">Du, Z.</span>, <span class="refAuthor">Boucadair, M.</span>, <span class="refAuthor">Contreras, L. M.</span>, and <span class="refAuthor">J. Drake</span>, <span class="refTitle">"A Framework for Computing-Aware Traffic Steering (CATS)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cats-framework</span>, <time datetime="2026-02-17" class="refDate">17 February 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-cats-framework/">https://datatracker.ietf.org/doc/draft-ietf-cats-framework/</a>&gt;</span>. </dd>
+<span class="refAuthor">Li, C.</span>, <span class="refAuthor">Du, Z.</span>, <span class="refAuthor">Boucadair, M.</span>, <span class="refAuthor">Contreras, L. M.</span>, <span class="refAuthor">Drake, J.</span>, <span class="refAuthor">Huang, D.</span>, and <span class="refAuthor">G. S. Mishra</span>, <span class="refTitle">"A Framework for Computing-Aware Traffic Steering (CATS)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cats-framework</span>, <time datetime="2025-02-10" class="refDate">10 February 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-cats-framework/">https://datatracker.ietf.org/doc/draft-ietf-cats-framework/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.draft-ietf-cats-metric-definition">[I-D.draft-ietf-cats-metric-definition]</dt>
         <dd>
-<span class="refAuthor">Yao, K.</span>, <span class="refAuthor">Li, C.</span>, <span class="refAuthor">Contreras, L.M.</span>, <span class="refAuthor">Ros-Giralt, J.</span>, and <span class="refAuthor">G. Zeng</span>, <span class="refTitle">"CATS Metrics Definition"</span>, <time datetime="2026-02-02" class="refDate">2 February 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-cats-metric-definition/">https://datatracker.ietf.org/doc/draft-ietf-cats-metric-definition/</a>&gt;</span>. </dd>
+<span class="refAuthor">Yao, K.</span>, <span class="refAuthor">Shi, H.</span>, <span class="refAuthor">Li, C.</span>, <span class="refAuthor">Contreras, LM.</span>, and <span class="refAuthor">J. Ros-Giralt</span>, <span class="refTitle">"Mobile User Plane Architecture using Segment Routing for Distributed Mobility Management"</span>, <time datetime="2025-02-05" class="refDate">5 February 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-cats-metric-definition/">https://datatracker.ietf.org/doc/draft-ietf-cats-metric-definition/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.draft-ietf-cats-usecases-requirements">[I-D.draft-ietf-cats-usecases-requirements]</dt>
         <dd>
-<span class="refAuthor">Yao, K.</span>, <span class="refAuthor">Contreras, L.M.</span>, <span class="refAuthor">Shi, H.</span>, <span class="refAuthor">Zhang, S.</span>, and <span class="refAuthor">Q. An</span>, <span class="refTitle">"Mobile User Plane Architecture using Segment Routing for Distributed Mobility Management"</span>, <time datetime="2026-02-04" class="refDate">4 February 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-cats-usecases-requirements/">https://datatracker.ietf.org/doc/draft-ietf-cats-usecases-requirements/</a>&gt;</span>. </dd>
+<span class="refAuthor">Yao, K.</span>, <span class="refAuthor">Trossen, D.</span>, <span class="refAuthor">Boucadair, M.</span>, <span class="refAuthor">Contreras, LM.</span>, <span class="refAuthor">Shi, H.</span>, <span class="refAuthor">Li, Y.</span>, <span class="refAuthor">Zhang, S.</span>, and <span class="refAuthor">Q. An</span>, <span class="refTitle">"Mobile User Plane Architecture using Segment Routing for Distributed Mobility Management"</span>, <time datetime="2025-02-14" class="refDate">14 February 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-cats-usecases-requirements/">https://datatracker.ietf.org/doc/draft-ietf-cats-usecases-requirements/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.draft-ietf-dmm-mup-architecture">[I-D.draft-ietf-dmm-mup-architecture]</dt>
         <dd>
-<span class="refAuthor">Matsushima, S.</span>, <span class="refAuthor">Horiba, K.</span>, <span class="refAuthor">Kawakami, Y.</span>, <span class="refAuthor">Murakami, T.</span>, <span class="refAuthor">Patel, K.</span>, and <span class="refAuthor">J. Horn</span>, <span class="refTitle">"Mobile User Plane Architecture using Segment Routing for Distributed Mobility Management"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, ietf-dmm-mup-architecture</span>, <time datetime="2025-10-20" class="refDate">20 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-dmm-mup-architecture/">https://datatracker.ietf.org/doc/draft-ietf-dmm-mup-architecture/</a>&gt;</span>. </dd>
+<span class="refAuthor">Matsushima, S.</span>, <span class="refAuthor">Horiba, K.</span>, <span class="refAuthor">Kawakami, Y.</span>, <span class="refAuthor">Murakami, T.</span>, <span class="refAuthor">Patel, K.</span>, and <span class="refAuthor">J. Horn</span>, <span class="refTitle">"Mobile User Plane Architecture using Segment Routing for Distributed Mobility Management"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, ietf-dmm-mup-architecture</span>, <time datetime="2025-05-30" class="refDate">30 May 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-dmm-mup-architecture/">https://datatracker.ietf.org/doc/draft-ietf-dmm-mup-architecture/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.draft-ietf-dmm-srv6mob-arch">[I-D.draft-ietf-dmm-srv6mob-arch]</dt>
         <dd>
-<span class="refAuthor">Kamata, T.</span>, <span class="refAuthor">Horn, J.</span>, <span class="refAuthor">Jalil, L.</span>, <span class="refAuthor">Cheng, W.</span>, and <span class="refAuthor">M. Kohno</span>, <span class="refTitle">"Architecture Discussion on SRv6 Mobile User plane"</span>, <time datetime="2025-09-02" class="refDate">2 September 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-dmm-srv6mob-arch/">https://datatracker.ietf.org/doc/draft-ietf-dmm-srv6mob-arch/</a>&gt;</span>. </dd>
+<span class="refAuthor">Kohno, M.</span>, <span class="refAuthor">Clad, F.</span>, <span class="refAuthor">Camarillo, P.</span>, <span class="refAuthor">Ali, Z.</span>, and <span class="refAuthor">L. Jalil</span>, <span class="refTitle">"Architecture Discussion on SRv6 Mobile User plane"</span>, <time datetime="2024-02-15" class="refDate">15 February 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-dmm-srv6mob-arch/">https://datatracker.ietf.org/doc/draft-ietf-dmm-srv6mob-arch/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.draft-ietf-idr-5g-edge-service-metadata">[I-D.draft-ietf-idr-5g-edge-service-metadata]</dt>
         <dd>
-<span class="refAuthor">Dunbar, L.</span>, <span class="refAuthor">Majumdar, K.</span>, <span class="refAuthor">Li, C.</span>, <span class="refAuthor">Mishra, G.</span>, and <span class="refAuthor">Z. Du</span>, <span class="refTitle">"BGP Extension for 5G Edge Service Metadata"</span>, <time datetime="2025-09-18" class="refDate">18 September 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-idr-5g-edge-service-metadata/">https://datatracker.ietf.org/doc/draft-ietf-idr-5g-edge-service-metadata/</a>&gt;</span>. </dd>
+<span class="refAuthor">Dunbar, L.</span>, <span class="refAuthor">Majumdar, K.</span>, <span class="refAuthor">Li, C.</span>, <span class="refAuthor">Mishra, G.</span>, and <span class="refAuthor">Z. Du</span>, <span class="refTitle">"Distribute Service Metric By BGP"</span>, <time datetime="2024-07-22" class="refDate">22 July 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-idr-5g-edge-service-metadata/">https://datatracker.ietf.org/doc/draft-ietf-idr-5g-edge-service-metadata/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.draft-lin-idr-distribute-service-metric">[I-D.draft-lin-idr-distribute-service-metric]</dt>
         <dd>
-<span class="refAuthor">Lin, C.</span>, <span class="refAuthor">Yao, H.</span>, and <span class="refAuthor">Q. Xiong</span>, <span class="refTitle">"Distribute Service Metric By BGP"</span>, <time datetime="2025-12-21" class="refDate">21 December 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-lin-idr-distribute-service-metric/">https://datatracker.ietf.org/doc/draft-lin-idr-distribute-service-metric/</a>&gt;</span>. </dd>
+<span class="refAuthor">Lin, C.</span> and <span class="refAuthor">H. Yao</span>, <span class="refTitle">"Distribute Service Metric By BGP"</span>, <time datetime="2024-06-06" class="refDate">6 June 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-lin-idr-distribute-service-metric/">https://datatracker.ietf.org/doc/draft-lin-idr-distribute-service-metric/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="ieee-access-cats-mup">[ieee-access-cats-mup]</dt>
         <dd>
 <span class="refAuthor">Tran, M-N.</span>, <span class="refAuthor">Duong, V-B.</span>, and <span class="refAuthor">Y. Kim</span>, <span class="refTitle">"Design of Computing-Aware Traffic Steering Architecture for 5G Mobile User Plane"</span>, <time datetime="2024-06-24" class="refDate">24 June 2024</time>, <span>&lt;<a href="https://doi.org/10.1109/ACCESS.2024.3418960">https://doi.org/10.1109/ACCESS.2024.3418960</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="ieee-access-service-continuity-service-segmentation">[ieee-access-service-continuity-service-segmentation]</dt>
+        <dd>
+<span class="refAuthor">Nguyen-Trung, K.</span>, <span class="refAuthor">Tran, M-N.</span>, and <span class="refAuthor">Y. Kim</span>, <span class="refTitle">"Enabling Service Continuity for Stateful Service Segmentation in Mobile Edge Computing toward 6G"</span>, <time datetime="2025-07" class="refDate">July 2025</time>, <span>&lt;<a href="https://doi.org/10.1109/ACCESS.2026.3661972">https://doi.org/10.1109/ACCESS.2026.3661972</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="ieee-access-traffic-steering-service-segmentation">[ieee-access-traffic-steering-service-segmentation]</dt>
+        <dd>
+<span class="refAuthor">Tran, M-N.</span>, <span class="refAuthor">Nguyen-Trung, K.</span>, and <span class="refAuthor">Y. Kim</span>, <span class="refTitle">"Design of 5G Architecture Enhancements for Supporting Edge Split Computing Service Pipeline"</span>, <time datetime="2025-07" class="refDate">July 2025</time>, <span>&lt;<a href="https://doi.org/10.1109/ACCESS.2025.3630182">https://doi.org/10.1109/ACCESS.2025.3630182</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC4786">[RFC4786]</dt>
         <dd>
 <span class="refAuthor">Abley, J.</span> and <span class="refAuthor">K. Lindqvist</span>, <span class="refTitle">"Operation of Anycast Services"</span>, <time datetime="2006-12" class="refDate">December 2006</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/rfc4786/">https://datatracker.ietf.org/doc/rfc4786/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC7333">[RFC7333]</dt>
+        <dd>
+<span class="refAuthor">Chan, H.</span>, <span class="refAuthor">Liu, D.</span>, <span class="refAuthor">Seite, P.</span>, <span class="refAuthor">Yokota, H.</span>, and <span class="refAuthor">J. Korhonen</span>, <span class="refTitle">"Requirements for Distributed Mobility Management"</span>, <time datetime="2014-08" class="refDate">August 2014</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/rfc7333/">https://datatracker.ietf.org/doc/rfc7333/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9491">[RFC9491]</dt>
       <dd>
-<span class="refAuthor">Chan, A.</span>, <span class="refAuthor">Liu, D.</span>, <span class="refAuthor">Seite, P.</span>, <span class="refAuthor">Yokota, H.</span>, and <span class="refAuthor">J. Korhonen</span>, <span class="refTitle">"Requirements for Distributed Mobility Management"</span>, <time datetime="2014-08" class="refDate">August 2014</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/rfc7333/">https://datatracker.ietf.org/doc/rfc7333/</a>&gt;</span>. </dd>
+<span class="refAuthor">Guichard, J.</span> and <span class="refAuthor">J. Tantsura</span>, <span class="refTitle">"Integration of the Network Service Header (NSH) and Segment Routing for Service Function Chaining (SFC)"</span>, <time datetime="2023-11" class="refDate">November 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/rfc9491/">https://datatracker.ietf.org/doc/rfc9491/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
